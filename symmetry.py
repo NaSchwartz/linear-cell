@@ -1,5 +1,5 @@
 # Grid size
-size = 3
+size = 4
 
 import Tools
 
@@ -37,21 +37,23 @@ def translate_left(num : str) -> str :
     else:
         return num
 
-#Tools.print_grid("000010000")
-#Tools.print_grid(translate_left("000010000"))
-#Tools.print_grid(translate_right("000010000"))
-#Tools.print_grid(translate_down("000010000"))
-#Tools.print_grid(translate_up("000010000"))
+#size = 4
+#Tools.print_grid("0000011001100000")
+#Tools.print_grid(translate_left("0000011001100000"))
+#Tools.print_grid(translate_right("0000011001100000"))
+#Tools.print_grid(translate_down("0000011001100000"))
+#Tools.print_grid(translate_up("0000011001100000"))
+
 
 #################################
 #           Reflection          #
 #################################
 
-# only size 3 for now
-def vert_reflection(num : str) -> str :
+# 3x3 example
+def vert_reflection3x3(num : str) -> str :
     return num[-size:] + num[size:-size] + num[:size]
-# only size 3 for now
-def horz_reflection(num : str) -> str :
+# 3x3 example
+def horz_reflection3x3(num : str) -> str :
     left = ""
     right = ""
     center = ""
@@ -65,11 +67,74 @@ def horz_reflection(num : str) -> str :
         desc += left[i] + center[i] + right[i]
     return desc
 
-Tools.print_grid("011110101")
-# horz_reflection("011110101")
-Tools.print_grid(horz_reflection("011110101"))
+
+# General vertical reflection
+def vert_reflection(num : str) -> str :
+    # Split the "grid" into rows
+    rows = [""]*size
+    for i in range(size):
+        rows[i] = num[i*size:i*size+size]
+    
+    # Concatenate the list in reverse order, then return
+    desc = ""
+    for i in range(size):
+        desc += rows[size-i-1]
+    return desc
+
+# General horizontal reflection
+def horz_reflection(num : str) -> str :
+    # Split the "grid" into columns
+    columns = [""]*size
+    for i in range(size):
+        for j in range(size):
+            columns[i] += num[size*j + i]
+    
+    # Nest the list elements in reverse, then return
+    desc = ""
+    for i in range(size):
+        for j in range(size):
+            desc += columns[size-j-1][i]
+    return desc
+
+#size = 4
+#Tools.print_grid("0111110101011100")
+#Tools.print_grid(vert_reflection("0111110101011100"))
+#Tools.print_grid(horz_reflection("0111110101011100"))
 
 
 #################################
 #           Rotation            #
 #################################
+
+# columns into rows (counter-clockwise)
+def positive_rotation(num : str) -> str :
+    # Split the "grid" into columns
+    columns = [""]*size
+    for i in range(size):
+        for j in range(size):
+            columns[i] += num[size*j + i]
+
+    # Turn the columns into rows
+    desc = ""
+    for i in range(size):
+        desc += columns[size-i-1]
+    return desc
+
+# rows into columns (clockwise)
+def negative_rotation(num : str) -> str :
+    # Split the "grid" into rows
+    rows = [""]*size
+    for i in range(size):
+        rows[i] = num[i*size:i*size+size]
+    
+    # Turn rows into columns
+    desc = ""
+    for i in range(size):
+        for j in range(size):
+            desc += rows[size-j-1][i]
+    return desc
+
+#size = 4
+#Tools.print_grid("1111111011001000")
+#Tools.print_grid(positive_rotation("1111111011001000"))
+#Tools.print_grid(negative_rotation("1111111011001000"))

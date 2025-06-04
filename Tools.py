@@ -1,5 +1,5 @@
 # Grid size
-size = 3
+size = 4
 
 # Base 10 version
 def print_grid(number : int = 0, N = size):
