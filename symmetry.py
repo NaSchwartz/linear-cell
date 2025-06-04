@@ -31,7 +31,7 @@ def translate_right(num : str) -> str :
 def translate_left(num : str) -> str :
     check = ""
     for i in range(size):
-        check += num[i*size + 2]
+        check += num[i*size + size-1]
     if check == "0"*size:
         return num[-1]+num[:-1]
     else:
@@ -47,6 +47,27 @@ def translate_left(num : str) -> str :
 #           Reflection          #
 #################################
 
+# only size 3 for now
+def vert_reflection(num : str) -> str :
+    return num[-size:] + num[size:-size] + num[:size]
+# only size 3 for now
+def horz_reflection(num : str) -> str :
+    left = ""
+    right = ""
+    center = ""
+    for i in range(size):
+        left += num[i*size + size-1]
+        center += num[i*size + size-2]
+        right += num[i * size]
+
+    desc = ""
+    for i in range(size):
+        desc += left[i] + center[i] + right[i]
+    return desc
+
+Tools.print_grid("011110101")
+# horz_reflection("011110101")
+Tools.print_grid(horz_reflection("011110101"))
 
 
 #################################
