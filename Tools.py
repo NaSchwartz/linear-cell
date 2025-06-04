@@ -1,6 +1,8 @@
 # Grid size
 size = 4
 
+import symmetry
+
 # Base 10 version
 def print_grid(number : int = 0, N = size):
     # convert number to binary
@@ -37,6 +39,9 @@ def print_grid(num : str, N = size):
 
 def in_range(num):
     return 0 <= num <= size**2
+
+def generare_moves(num : str) -> str :
+    pass
 
 # Generate all posible moves (print/return a list of states in binary)
     # singles, n-tuples, splits
