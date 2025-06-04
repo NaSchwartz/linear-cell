@@ -42,5 +42,7 @@ memo = {}
     # Ex: all C4 states -> ONE type of C4
 
 # Given a state number, recursively check for N/P positions
+    # P if all moves in a state lead to N
+    # N if one move in a state leads to P
 
 print_grid(45)
