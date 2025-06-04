@@ -1,3 +1,7 @@
-import tools
+import sys
+import Tools
+# arrays where each entry takes up a single bit
+from bitarray import bitarray
 
-print("Hello World!")
+bits = bitarray('00101101') 
+print(bits)

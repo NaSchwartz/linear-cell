@@ -45,4 +45,4 @@ memo = {}
     # P if all moves in a state lead to N
     # N if one move in a state leads to P
 
-print_grid(45)
+#print_grid(45)
