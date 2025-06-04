@@ -1,6 +1,7 @@
 # Grid size
 size = 3
 
+# Base 10 version
 def print_grid(number : int = 0, N = size):
     # convert number to binary
     num = str(bin(number))[2:]
@@ -19,6 +20,20 @@ def print_grid(number : int = 0, N = size):
             desc+= "\n"
     print(num)
     print(desc)
+#Binary version
+def print_grid(num : str, N = size):
+    cells = ["\u00B7", "\u25A1"]
+    desc = ""
+    counter = 0
+
+    for i in range(len(num)-1,-1,-1):
+        desc += cells[int(num[i])] + " "
+        counter += 1
+        if counter%N == 0 and counter !=N**2:
+            desc+= "\n"
+    print(num)
+    print(desc)
+
 
 def in_range(num):
     return 0 <= num <= size**2
