@@ -40,12 +40,11 @@ def print_grid(num : str, N = size):
 def in_range(num):
     return 0 <= num <= size**2
 
-def generare_moves(num : str) -> str :
-    pass
-
 # Generate all posible moves (print/return a list of states in binary)
+def generare_moves(num : str) -> str :
     # singles, n-tuples, splits
     # horizontal, vertical, diaganol
+    pass
 
 memo = {}
 
