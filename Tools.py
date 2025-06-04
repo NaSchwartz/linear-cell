@@ -1,5 +1,5 @@
 # Grid size
-size = 4
+size = 3
 
 def print_grid(number : int = 0, N = size):
     # convert number to binary
@@ -26,3 +26,21 @@ def in_range(num):
 # Generate all posible moves (print/return a list of states in binary)
     # singles, n-tuples, splits
     # horizontal, vertical, diaganol
+
+memo = {}
+
+# Enter known P-positions into memory           [DO THIS OPTIIZATION LATER]
+    # the null position, D2, C3, C4, etc
+    # When doing so, use next two functions
+
+# Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
+    # changes states into a single cannonical state
+    # flipping, rotating, and translating
+
+# Reduce a given state using isomorphisms       [DO THIS OPTIIZATION LAST!]
+    # changes states into a single cannonical state
+    # Ex: all C4 states -> ONE type of C4
+
+# Given a state number, recursively check for N/P positions
+
+print_grid(45)
