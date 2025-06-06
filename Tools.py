@@ -1,7 +1,7 @@
 # Grid size
 size = 4
 
-import symmetry
+import symmetry, generator
 
 # Base 10 version
 def print_grid(number : int = 0, N = size):
@@ -40,11 +40,17 @@ def print_grid(num : str, N = size):
 def in_range(num):
     return 0 <= num <= size**2
 
-# Generate all posible moves (print/return a list of states in binary)
 def generare_moves(num : str) -> str :
-    # singles, n-tuples, splits
-    # horizontal, vertical, diaganol
-    pass
+    moves = []
+    # singles
+    moves += generator.singles_list(num)
+    # horizontals
+    moves += generator.horizontal(num)
+    # verticals
+    moves += generator.vertical(num)
+    # diaganols
+    moves += generator.diaganols(num)
+    return moves
 
 memo = {}
 
