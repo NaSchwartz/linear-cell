@@ -2,13 +2,28 @@
 size = 4
 
 from math import sqrt
+from itertools import combinations
 
 def print_moves(move_list):
     for i in move_list:
         print(i)
 
 def multis(num:str):
+    ones = []
+    i = 0
+    for ch in num:
+        if ch == "1":
+            ones.append(i)
+        i += 1
+
+    # combinatorics :D
+    for i in range(2,len(ones)+1,1):
+        for j in combinations(ones, i):
+            pass
+
     
+print(multis("0110")) # 0000
+print(multis("1110")) # 00010, 01000, 00100, 00000 
 
 #################################
 #           Singles             #
