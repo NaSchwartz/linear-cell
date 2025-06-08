@@ -116,16 +116,60 @@ def verticals(num:str):
 #           Diaganol            #
 #################################
 
+def pyramid(height:int):
+    flag = False
+    inc = 0
+    alist = [0]*(height+height-1)
+    for i in range(height+height-1):
+        if i == height:
+            flag = True
+            inc += 1
+        if flag:
+            alist[i] = i - inc
+            inc += 2
+        else:
+            alist[i] = i + 1
+    return alist
+
+def corner(length:int):
+    alist = [0]*(length+length-1)
+    j = 0
+    for i in range(length+length-1):
+        if i < length:
+            alist[i] = length-1-i
+        else:
+            alist[i] = length*(j+1)
+            j += 1
+    return alist
+
+def in_range(num):
+    return 0 <= num <= size**2
+
+
 def split_into_diags(num:str):
-    diags = [""]*size
+    diags = [""]*(size+size-1)
+    ranges = pyramid(size)
+    print(corner(5))
     pass
 
+
 def diaganols(num:str):
-    diags = []
+    total = []
+    # split the binary string into rows
     diags = split_into_diags(num)
+    inc = 0
     for diag in diags:
-        if row.count("1") < 2:
+        if diag.count("1") < 2:
+            inc += 1
             continue
         else:
-            diags += multis(diag)
-    return diags
+            # create the moves for each row
+            for comb in multis(diag):
+                #print(comb)
+                # smash the combinations back into the other rows
+                pass
+        
+        inc += 1
+
+    return total
+

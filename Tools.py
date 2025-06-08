@@ -1,5 +1,5 @@
 # Grid size
-size = 4
+size = 3
 
 import generator, symmetry
 
@@ -37,9 +37,6 @@ def print_grid(num : str, N = size):
     print(desc)
 
 
-def in_range(num):
-    return 0 <= num <= size**2
-
 def generare_moves(num : str) -> str :
     moves = set()
     # singles
@@ -70,4 +67,5 @@ memo = {}
     # P if all moves in a state lead to N
     # N if one move in a state leads to P
 
-#print_grid(45)
+print_grid("111010001")
+generator.split_into_diags("101010110")
