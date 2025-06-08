@@ -1,5 +1,5 @@
 # Grid size (Not needed from)
-size = 4
+size = 3
 
 from math import sqrt
 from itertools import combinations
@@ -9,21 +9,26 @@ def print_moves(move_list):
         print(i)
 
 def multis(num:str):
+    # Consturction of positions of the ones list
     ones = []
     i = 0
     for ch in num:
         if ch == "1":
             ones.append(i)
         i += 1
-
-    # combinatorics :D
-    for i in range(2,len(ones)+1,1):
-        for j in combinations(ones, i):
-            pass
-
     
-print(multis("0110")) # 0000
-print(multis("1110")) # 00010, 01000, 00100, 00000 
+    # Set of unique unordered elements 
+    moves = set()
+
+    # Combinatorics :D
+    for i in range(2,len(ones)+1,1):
+        for comb in combinations(ones, i):
+            temp = list(num)
+            for j in comb:
+                temp[j] = "0"
+            
+            moves.add(''.join(temp))
+    return sorted(moves)
 
 #################################
 #           Singles             #
@@ -64,14 +69,25 @@ def split_into_rows(num:str):
 
 def horizontals(num:str):
     horiz = []
+    # split the binary string into rows
     rows = split_into_rows(num)
+    inc = 0
     for row in rows:
         if row.count("1") < 2:
             continue
         else:
-            horiz += multis(row)
-    return horiz
+            # create the moves for each row
+            for comb in multis(row):
+                copy_rows = rows.copy()
+                copy_rows[inc] = comb
+                horiz.append("".join(copy_rows))
+        
+        inc += 1
 
+    return horiz
+print(split_into_rows("111000000"))
+print(horizontals("111000000"))
+print(multis("111000000"))
 
 #################################
 #           Vertical            #

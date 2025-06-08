@@ -41,15 +41,15 @@ def in_range(num):
     return 0 <= num <= size**2
 
 def generare_moves(num : str) -> str :
-    moves = []
+    moves = set()
     # singles
-    moves += generator.singles_list(num)
+    moves |= generator.singles_list(num)
     # horizontals
-    moves += generator.horizontal(num)
+    moves |= generator.horizontal(num)
     # verticals
-    moves += generator.vertical(num)
+    moves |= generator.vertical(num)
     # diaganols
-    moves += generator.diaganols(num)
+    moves |= generator.diaganols(num)
     return moves
 
 memo = {}
