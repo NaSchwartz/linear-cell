@@ -3,6 +3,7 @@ size = 3
 
 from math import sqrt
 from itertools import combinations
+from symmetry import positive_rotation, negative_rotation
 
 def print_moves(move_list):
     for i in move_list:
@@ -98,30 +99,17 @@ def horizontals(num:str):
 #           Vertical            #
 #################################
 
-def split_into_columns(num:str):
-    verts = [""]*size
-    pass
-
 def verticals(num:str):
+    num2 = positive_rotation(num)
+    temp = horizontals(num2)
     vert = []
-    cols = split_into_columns(num)
-    inc = 0
-    for col in cols:
-        if col.count("1") < 2:
-            inc += 1
-            continue
-        else:
-            # create the moves for each row
-            for comb in multis(col):
-                #print(comb)
-                # smash the combinations back into the other rows
-                copy_cols = cols.copy()
-                copy_cols[inc] = comb
-                horiz.append("".join(copy_rows))
-
-            inc += 1
-    
+    for grid in temp:
+        vert.append(negative_rotation(grid))
     return vert
+
+#print(horizontals("001001001"))
+#print(verticals("001001001"))
+#print(multis("111"))
 
 
 #################################

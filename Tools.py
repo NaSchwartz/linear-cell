@@ -1,7 +1,7 @@
 # Grid size
 size = 4
 
-import symmetry, generator
+import generator, symmetry
 
 # Base 10 version
 def print_grid(number : int = 0, N = size):

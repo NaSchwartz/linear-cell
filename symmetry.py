@@ -1,7 +1,8 @@
 # Grid size
-size = 4
+size = 3
 
-import Tools
+# importing tools purely for testing
+#import Tools
 
 #################################
 #           Translation         #
@@ -135,6 +136,6 @@ def negative_rotation(num : str) -> str :
     return desc
 
 #size = 4
-#Tools.print_grid("1111111011001000")
-#Tools.print_grid(positive_rotation("1111111011001000"))
-#Tools.print_grid(negative_rotation("1111111011001000"))
+#Tools.print_grid("1110101011001000")
+#Tools.print_grid(positive_rotation("1110101011001000"))
+#Tools.print_grid(negative_rotation("1110101011001000"))
