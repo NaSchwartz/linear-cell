@@ -152,7 +152,6 @@ def split_into_diags(num:str):
     print(corner(5))
     pass
 
-
 def diaganols(num:str):
     total = []
     # split the binary string into rows
