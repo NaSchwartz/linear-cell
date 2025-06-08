@@ -74,10 +74,13 @@ def horizontals(num:str):
     inc = 0
     for row in rows:
         if row.count("1") < 2:
+            inc += 1
             continue
         else:
             # create the moves for each row
             for comb in multis(row):
+                #print(comb)
+                # smash the combinations back into the other rows
                 copy_rows = rows.copy()
                 copy_rows[inc] = comb
                 horiz.append("".join(copy_rows))
@@ -85,9 +88,11 @@ def horizontals(num:str):
         inc += 1
 
     return horiz
-print(split_into_rows("111000000"))
-print(horizontals("111000000"))
-print(multis("111000000"))
+
+#print(split_into_rows("111111111"))
+#print(horizontals("111111111"))
+#print(multis("111"))
+
 
 #################################
 #           Vertical            #
@@ -99,12 +104,23 @@ def split_into_columns(num:str):
 
 def verticals(num:str):
     vert = []
-    verts = split_into_columns(num)
-    for vert in verts:
-        if row.count("1") < 2:
+    cols = split_into_columns(num)
+    inc = 0
+    for col in cols:
+        if col.count("1") < 2:
+            inc += 1
             continue
         else:
-            vert += multis(row)
+            # create the moves for each row
+            for comb in multis(col):
+                #print(comb)
+                # smash the combinations back into the other rows
+                copy_cols = cols.copy()
+                copy_cols[inc] = comb
+                horiz.append("".join(copy_rows))
+
+            inc += 1
+    
     return vert
 
 
