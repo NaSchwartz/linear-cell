@@ -1,5 +1,7 @@
 # Grid size
-size = 3
+size = 4
+def set_size():
+    return size
 
 # importing tools purely for testing
 #import Tools

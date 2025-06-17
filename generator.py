@@ -1,5 +1,5 @@
 # Grid size (Not needed from)
-size = 3
+size = 4
 
 from math import sqrt
 from itertools import combinations
