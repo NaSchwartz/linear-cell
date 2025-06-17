@@ -98,13 +98,13 @@ def optimal_move(p_pos:str):
     for state in generate_moves(p_pos):
         print(generate_moves(state))
         if np_pos(state):
+            print("Done!")
             return
     print("You are in a P-position! :(")
 
+
+
 optimal_move("1110111010110110")
-print("Done!")
-
-
 
 #print_grid("111010001")
 #generator.split_into_diags("101010110")
