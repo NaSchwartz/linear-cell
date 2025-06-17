@@ -40,13 +40,13 @@ def print_grid(num : str, N = size):
 def generare_moves(num : str) -> str :
     moves = set()
     # singles
-    moves |= generator.singles_list(num)
+    moves.update(generator.singles_list(num))
     # horizontals
-    moves |= generator.horizontal(num)
+    moves.update(generator.horizontals(num))
     # verticals
-    moves |= generator.vertical(num)
-    # diaganols
-    moves |= generator.diaganols(num)
+    moves.update(generator.verticals(num))
+    # diaganols - not yet installed
+    #moves |= generator.diaganols(num)
     return moves
 
 memo = {}
@@ -63,9 +63,34 @@ memo = {}
     # changes states into a single cannonical state
     # Ex: all C4 states -> ONE type of C4
 
-# Given a state number, recursively check for N/P positions
-    # P if all moves in a state lead to N
-    # N if one move in a state leads to P
+def is_p_position(num:str):
+    # base case: P-position
+    if num == "0"*size**2:
+        return False
+    # base case: N-position
+    elif num.count("1") == 1:
+        return True
+    else:
+        # if all moves are N-positions (True), it's a P-position
+        # if 1 move is a P-position (False), it's an N-position
+        return all(is_p_position_rec(num))
 
-print_grid("111010001")
-generator.split_into_diags("101010110")
+def is_p_position_rec(num:str):
+    bits = []
+    for state in generare_moves(num):
+        bits.append(is_p_position(state))
+    return bits
+
+def np_pos(num:str):
+    if is_p_position(num):
+        print("P-postion")
+    else:
+        print("N-position")
+
+#print_grid("111010001")
+#generator.split_into_diags("101010110")
+
+#print(generare_moves("000001101"))
+#print_grid("000001101")
+
+np_pos("111111111")

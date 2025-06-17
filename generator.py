@@ -145,13 +145,13 @@ def corner(length:int):
 def in_range(num):
     return 0 <= num <= size**2
 
-
+#WIP
 def split_into_diags(num:str):
     diags = [""]*(size+size-1)
     ranges = pyramid(size)
     print(corner(5))
     pass
-
+#WIP
 def diaganols(num:str):
     total = []
     # split the binary string into rows
