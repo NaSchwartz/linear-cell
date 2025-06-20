@@ -100,7 +100,7 @@ def optimal_move(p_pos:str):
         if np_pos(state):
             print("Done!")
             return
-    print("You are in a P-position! :(")
+    print("You are in a P-position! :( So much wasted time and computation!")
 
 
 

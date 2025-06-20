@@ -147,12 +147,14 @@ def in_range(num:int):
 
 
 def split_into_diags(num:str):
+    # Indexing useful stuff
     diags = [""]*(size+size-1)
     ranges = pyramid(size)
     corn = corner(size)
-    print(corner(4))
-    print(ranges)
-    pass
+    #print(corner(4))
+    #print(ranges)
+    
+    # Putting it all together
     for i in range(len(diags)):
         increment = 0
         for j in range(ranges[i]):
@@ -181,4 +183,4 @@ def diaganols(num:str):
 
     return total
 
-print(split_into_diags("0110100110010110"))
+print(split_into_diags("011S10011001F110"))
