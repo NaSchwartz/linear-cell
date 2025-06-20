@@ -142,9 +142,6 @@ def corner(length:int):
             j += 1
     return alist
 
-def in_range(num:int):
-    return 0 <= num <= size**2
-
 
 def split_into_diags(num:str):
     # Indexing useful stuff
@@ -162,6 +159,9 @@ def split_into_diags(num:str):
             increment += size + 1
     return diags
 
+def split_into_anti_diags(num:str):
+    pass
+
 #WIP
 def diaganols(num:str):
     total = []
@@ -173,10 +173,10 @@ def diaganols(num:str):
             inc += 1
             continue
         else:
-            # create the moves for each row
+            # create the moves for each diag
             for comb in multis(diag):
                 #print(comb)
-                # smash the combinations back into the other rows
+                # smash the combinations back into the other diags
                 pass
         
         inc += 1

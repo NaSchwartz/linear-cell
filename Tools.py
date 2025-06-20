@@ -74,9 +74,10 @@ def is_p_position(num:str):
     else:
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
-        #return any(is_p_position_rec(num))
+        # Disclaimer: AI helped me with the next line because PAIN
         return not any(is_p_position(state) for state in generate_moves(num))
 
+# Unused
 def is_p_position_rec(num:str):
     bits = []
     for state in generate_moves(num):
