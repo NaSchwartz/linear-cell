@@ -142,15 +142,24 @@ def corner(length:int):
             j += 1
     return alist
 
-def in_range(num):
+def in_range(num:int):
     return 0 <= num <= size**2
 
-#WIP
+
 def split_into_diags(num:str):
     diags = [""]*(size+size-1)
     ranges = pyramid(size)
-    print(corner(5))
+    corn = corner(size)
+    print(corner(4))
+    print(ranges)
     pass
+    for i in range(len(diags)):
+        increment = 0
+        for j in range(ranges[i]):
+            diags[i]+=num[corn[i]+increment]
+            increment += size + 1
+    return diags
+
 #WIP
 def diaganols(num:str):
     total = []
@@ -172,3 +181,4 @@ def diaganols(num:str):
 
     return total
 
+print(split_into_diags("0110100110010110"))
