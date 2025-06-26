@@ -18,17 +18,17 @@ def generate_moves(num : str):
     return moves
 
 memo = {}
+# ol.(
 
-# Enter known P-positions into memory           [DO THIS OPTIIZATION LATER]
-    # the null position, D2, C3, C4, etc
-    # When doing so, use next two functions
+# Enter known N/P-positions into memory
 def enter_commons():
+    # False = N-pos     True = P-pos
     memo.update({"0111": False})
     memo.update({"1011": False})
     memo.update({"1101": False})
     memo.update({"1110": False})
-enter_commons()
-
+    memo.update({"1111": True})
+#enter_commons()
 
 
 # Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
@@ -40,11 +40,13 @@ enter_commons()
     # Ex: all C4 states -> ONE type of C4
 
 def is_p_position(num:str):
-    # check memo if already done
+    
+    # Firstly, check memo if already known
     temp = memo.get(num)
     if temp != None:
         print("time saved")
         return temp
+
     # base case: P-position
     if num == "0"*size**2:
         return True
@@ -57,15 +59,7 @@ def is_p_position(num:str):
         # Disclaimer: AI helped me with the next line because PAIN
         return not any(is_p_position(state) for state in generate_moves(num))
 
-# Unused
-def is_p_position_rec(num:str):
-    bits = []
-    for state in generate_moves(num):
-        bits.append(is_p_position(state))
-    return bits
-
-
-
+# for testing purposes only
 def np_pos(num:str):
     print_grid(num)
     if is_p_position(num):
@@ -75,6 +69,7 @@ def np_pos(num:str):
         print("N-position")
         return False
 
+# main function to be used
 def optimal_move(p_pos:str):
     for state in generate_moves(p_pos):
         print(generate_moves(state))
@@ -87,4 +82,4 @@ def optimal_move(p_pos:str):
 
 #print_grid("111010001")
 #generator.split_into_diags("101010110")
-optimal_move("1111")
+np_pos("1111")
