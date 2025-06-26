@@ -69,7 +69,7 @@ def split_into_rows(num:str):
         rows[i] = num[i*size:i*size+size]
     return rows
 
-def horizontals(num:str):
+def horizontals(num:str): 
     horiz = []
     # split the binary string into rows
     rows = split_into_rows(num)
@@ -184,4 +184,4 @@ def diaganols(num:str):
 
     return total
 
-print(split_into_diags("011S10011001F110"))
+#print(split_into_diags("011S10011001F110"))

@@ -5,7 +5,7 @@ from printing import print_grid, set_size
 size = set_size()
 
 
-def generate_moves(num : str) -> str :
+def generate_moves(num : str):
     moves = set()
     # singles
     moves.update(generator.singles_list(num))
@@ -22,6 +22,14 @@ memo = {}
 # Enter known P-positions into memory           [DO THIS OPTIIZATION LATER]
     # the null position, D2, C3, C4, etc
     # When doing so, use next two functions
+def enter_commons():
+    memo.update({"0111": False})
+    memo.update({"1011": False})
+    memo.update({"1101": False})
+    memo.update({"1110": False})
+enter_commons()
+
+
 
 # Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
     # changes states into a single cannonical state
@@ -32,6 +40,11 @@ memo = {}
     # Ex: all C4 states -> ONE type of C4
 
 def is_p_position(num:str):
+    # check memo if already done
+    temp = memo.get(num)
+    if temp != None:
+        print("time saved")
+        return temp
     # base case: P-position
     if num == "0"*size**2:
         return True
@@ -72,7 +85,6 @@ def optimal_move(p_pos:str):
 
 
 
-optimal_move("1110111010110110")
-
 #print_grid("111010001")
 #generator.split_into_diags("101010110")
+optimal_move("1111")
