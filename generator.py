@@ -1,13 +1,14 @@
-# Grid size (Not needed from)
-size = 4
-
+# math
 from math import sqrt
 from itertools import combinations
+# symmetry
 from symmetry import positive_rotation, negative_rotation
+import symmetry
+# testing + printing
+from printing import print_grid, print_moves, set_size
 
-def print_moves(move_list):
-    for i in move_list:
-        print(i)
+# Grid size
+size = set_size()
 
 def multis(num:str):
     # Consturction of positions of the ones list

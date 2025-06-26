@@ -1,41 +1,8 @@
-# Grid size
-size = 4
-
 import generator, symmetry
+from printing import print_grid, set_size
 
-
-# Base 10 version
-def print_grid(number : int = 0, N = size):
-    # convert number to binary
-    num = str(bin(number))[2:]
-    # Add trailing zeros
-    num = "0"*(N**2 - len(num)) + num
-
-    cells = ["\u00B7", "\u25A1"]
-    desc = ""
-    counter = 0
-
-    # Convert binary string to grid
-    for i in range(len(num)-1,-1,-1):
-        desc += cells[int(num[i])] + " "
-        counter += 1
-        if counter%N == 0 and counter !=N**2:
-            desc+= "\n"
-    print(num)
-    print(desc)
-#Binary version
-def print_grid(num : str, N = size):
-    cells = ["\u00B7", "\u25A1"]
-    desc = ""
-    counter = 0
-
-    for i in range(len(num)-1,-1,-1):
-        desc += cells[int(num[i])] + " "
-        counter += 1
-        if counter%N == 0 and counter !=N**2:
-            desc+= "\n"
-    print(num)
-    print(desc)
+# Grid size
+size = set_size()
 
 
 def generate_moves(num : str) -> str :

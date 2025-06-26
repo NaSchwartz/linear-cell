@@ -1,10 +1,8 @@
-# Grid size
-size = 4
-def set_size():
-    return size
+from printing import print_grid, set_size
 
-# importing tools purely for testing
-#import Tools
+# Grid size
+size = set_size()
+
 
 #################################
 #           Translation         #
@@ -41,12 +39,35 @@ def translate_left(num : str) -> str :
         return num
 
 #size = 4
-#Tools.print_grid("0000011001100000")
-#Tools.print_grid(translate_left("0000011001100000"))
-#Tools.print_grid(translate_right("0000011001100000"))
-#Tools.print_grid(translate_down("0000011001100000"))
-#Tools.print_grid(translate_up("0000011001100000"))
+#print_grid("0000011001100000")
+#print_grid(translate_left("0000011001100000"))
+#print_grid(translate_right("0000011001100000"))
+#print_grid(translate_down("0000011001100000"))
+#print_grid(translate_up("0000011001100000"))
 
+def normal_form(num : str) -> str :
+    prev = num
+    curr = translate_down(num)
+    while True:
+        if prev == curr:
+            break
+        else:
+            prev = curr
+            curr = translate_down(curr)
+    
+    prev = curr
+    curr = translate_right(curr)
+    while True:
+        if prev == curr:
+            break
+        else:
+            prev = curr
+            curr = translate_right(curr)
+    
+    return curr
+
+#print_grid("0000000000000001")
+#print_grid(normal_form("0000000000000001"))
 
 #################################
 #           Reflection          #
@@ -100,9 +121,9 @@ def horz_reflection(num : str) -> str :
     return desc
 
 #size = 4
-#Tools.print_grid("0111110101011100")
-#Tools.print_grid(vert_reflection("0111110101011100"))
-#Tools.print_grid(horz_reflection("0111110101011100"))
+#print_grid("0111110101011100")
+#print_grid(vert_reflection("0111110101011100"))
+#print_grid(horz_reflection("0111110101011100"))
 
 
 #################################
