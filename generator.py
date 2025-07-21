@@ -176,12 +176,16 @@ def diaganols(num:str):
         else:
             # create the moves for each diag
             for comb in multis(diag):
-                #print(comb)
-                # smash the combinations back into the other diags
-                pass
+            # smash the combinations back into the other diags
+                total.append(smash_diags(comb,inc,diags.copy()))
         
         inc += 1
 
     return total
+
+def smash_diags(comb,  comb_index, diag_list):
+    diag_list[comb_index] = comb
+    pass
+   
 
 #print(split_into_diags("011S10011001F110"))
