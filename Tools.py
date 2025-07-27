@@ -4,6 +4,9 @@ from printing import print_grid, set_size
 # Grid size
 size = set_size()
 
+#######################################
+#           Move Generation           #
+#######################################
 
 def generate_moves(num : str):
     moves = set()
@@ -14,11 +17,32 @@ def generate_moves(num : str):
     # verticals
     moves.update(generator.verticals(num))
     # diaganols - not yet installed
-    #moves |= generator.diaganols(num)
+    #moves.update(generator.diaganols(num))
     return moves
 
 memo = {}
-# ol.(
+
+
+#######################################
+#        Symetry Optimization         #
+#######################################
+
+
+def is_this_in_memo(num : str):
+    return memo.get(num)
+
+def symmetry_check(num : str):
+    rotations = symmetry.normal_forms(num)
+    for i in rotations:
+        output = is_this_in_memo(i)
+        if output != None:
+            return output
+    return None
+
+
+#######################################
+#            Common States            #
+#######################################
 
 # Enter known N/P-positions into memory
 def enter_commons():
@@ -41,11 +65,17 @@ def enter_commons():
 
 def is_p_position(num:str):
     
-    # Firstly, check memo if already known
-    temp = memo.get(num)
-    if temp != None:
+    # First and foremost, check memory for symmetrical states
+    symm = symmetry_check(num)
+    if symm != None:
         print("time saved")
-        return temp
+        return symm
+
+    # Firstly, check memo if already known
+    #temp = memo.get(num)
+    #if temp != None:
+    #    print("time saved")
+    #    return temp
 
     # base case: P-position
     if num == "0"*size**2:

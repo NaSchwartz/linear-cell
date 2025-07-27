@@ -161,6 +161,7 @@ def split_into_diags(num:str):
     return diags
 
 def split_into_anti_diags(num:str):
+    # can horizontally reflect string, then preform main diag funciton
     pass
 
 #WIP
