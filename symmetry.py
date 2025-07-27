@@ -45,29 +45,6 @@ def translate_left(num : str) -> str :
 #print_grid(translate_down("0000011001100000"))
 #print_grid(translate_up("0000011001100000"))
 
-def normal_form(num : str) -> str :
-    prev = num
-    curr = translate_down(num)
-    while True:
-        if prev == curr:
-            break
-        else:
-            prev = curr
-            curr = translate_down(curr)
-    
-    prev = curr
-    curr = translate_right(curr)
-    while True:
-        if prev == curr:
-            break
-        else:
-            prev = curr
-            curr = translate_right(curr)
-    
-    return curr
-
-#print_grid("0000000000000001")
-#print_grid(normal_form("0000000000000001"))
 
 #################################
 #           Reflection          #
@@ -162,3 +139,44 @@ def negative_rotation(num : str) -> str :
 #Tools.print_grid("1110101011001000")
 #Tools.print_grid(positive_rotation("1110101011001000"))
 #Tools.print_grid(negative_rotation("1110101011001000"))
+
+
+#################################
+#           Normal Form         #
+#################################
+
+def normal_forms(num : str):
+    forms = ["","","",""]
+    curr = num
+    for i in range(len(forms)):
+        forms[i] = curr
+        forms[i] = move_to_bot_right(forms[i])
+        curr = positive_rotation(curr)
+    return forms
+
+def move_to_bot_right(num : str) -> str :
+    prev = num
+    curr = translate_down(num)
+    while True:
+        if prev == curr:
+            break
+        else:
+            prev = curr
+            curr = translate_down(curr)
+    
+    prev = curr
+    curr = translate_right(curr)
+    while True:
+        if prev == curr:
+            break
+        else:
+            prev = curr
+            curr = translate_right(curr)
+    
+    return curr
+
+#print_grid("0000000000000001")
+#print_grid(move_to_bot_right("0000000000000001"))
+
+#for i in normal_forms("101101000"):
+    #print_grid(i)
