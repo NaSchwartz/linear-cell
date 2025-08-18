@@ -143,6 +143,9 @@ def corner(length:int):
             j += 1
     return alist
 
+def make_index_list(size:int):
+    if size == 4:
+        return [3,2,1,0, 2,2,1,0, 1,1,1,0, 0,0,0,0]
 
 def split_into_diags(num:str):
     # Indexing useful stuff
@@ -165,11 +168,12 @@ def smash_diags(diags):
     start = size - 1 # this is the middle index of the array
     end = size*2 - 1 # this is the end index of the array
     increment = 0
-    
+    list_of_indices = make_index_list(size)
     for number_of_runs in range(size): # #runs = size
         for list_index in range(start, end, 1):
-            string_index = 0
+            string_index = list_of_indices[increment]
             original+=diags[list_index][string_index]
+            increment+=1
         start-=1
         end-=1
     return original[::-1]
@@ -199,10 +203,7 @@ def diaganols(num:str):
 
     return total
 
-print(split_into_diags("011S10011001F110"))
-print("011S10011001F110")
+print(split_into_diags("ponmlkjihgfedcba"))
+print("ponmlkjihgfedcba")
 print(range(size))
-print(smash_diags(split_into_diags("011S10011001F110")))
-
-#print(smash_diags(['A', 'B', 'C', 'D', 'E', 'F', 'G']))
-#print(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
+print(smash_diags(split_into_diags("ponmlkjihgfedcba")))
