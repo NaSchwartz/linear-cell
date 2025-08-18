@@ -17,8 +17,10 @@ def generate_moves(num : str):
     # verticals
     moves.update(generator.verticals(num))
     # diaganols - not yet installed
-    #moves.update(generator.diaganols(num))
+    moves.update(generator.diaganols(num))
     return moves
+
+# print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
 
 memo = {}
 

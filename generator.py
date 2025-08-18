@@ -146,6 +146,20 @@ def corner(length:int):
 def make_index_list(size:int):
     if size == 4:
         return [3,2,1,0, 2,2,1,0, 1,1,1,0, 0,0,0,0]
+    elif size == 3:
+        return [2,1,0, 1,1,0, 0,0,0]
+    elif size == 2:
+        return [1,0, 0,0]
+    else:
+        total = []
+        init = [0]*size
+        Next = init.copy()
+        for i in range(5, 0, -1):
+            total = Next + total
+            for j in range(0, i-1):
+                Next[j]+=1
+        return total
+print(make_index_list(5))
 
 def split_into_diags(num:str):
     # Indexing useful stuff
@@ -182,7 +196,6 @@ def split_into_anti_diags(num:str):
     # can horizontally reflect string, then preform main diag funciton
     pass
 
-#WIP
 def diaganols(num:str):
     total = []
     # split the binary string into rows
@@ -195,15 +208,24 @@ def diaganols(num:str):
         else:
             # create the moves for each diag
             for comb in multis(diag):
+                if len(comb) == 1:
+                    # diag is a single cell
+                    continue
                 #print(comb)
                 # smash the combinations back into the other diags
-                pass
-        
+                copy_diags = diags.copy()
+                copy_diags[inc] = comb
+                total.append(smash_diags(copy_diags))
+
         inc += 1
 
     return total
 
-print(split_into_diags("ponmlkjihgfedcba"))
-print("ponmlkjihgfedcba")
-print(range(size))
-print(smash_diags(split_into_diags("ponmlkjihgfedcba")))
+#print(split_into_diags("ponmlkjihgfedcba"))
+#print("ponmlkjihgfedcba")
+#print(range(size))
+#print(smash_diags(split_into_diags("ponmlkjihgfedcba")))
+
+alist = [0,1,2]
+alist = [0] + alist
+print(alist)
