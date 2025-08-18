@@ -8,7 +8,7 @@ import Tools
 #bits = bitarray('00101101') 
 #print(bits)
 
-Tools.optimal_move("100111111")
+#Tools.optimal_move("100111111")
 
 #ol.(
 

@@ -45,14 +45,14 @@ def symmetry_check(num : str):
 #######################################
 
 # Enter known N/P-positions into memory
-def enter_commons():
+def enter_commons(): 
     # False = N-pos     True = P-pos
     memo.update({"0111": False})
     memo.update({"1011": False})
     memo.update({"1101": False})
     memo.update({"1110": False})
     memo.update({"1111": True})
-#enter_commons()
+enter_commons()
 
 
 # Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
@@ -112,4 +112,4 @@ def optimal_move(p_pos:str):
 
 #print_grid("111010001")
 #generator.split_into_diags("101010110")
-np_pos("1111")
+#np_pos("1111")

@@ -160,6 +160,20 @@ def split_into_diags(num:str):
             increment += size + 1
     return diags
 
+def smash_diags(diags):
+    original = ""
+    start = size - 1 # this is the middle index of the array
+    end = size*2 - 1 # this is the end index of the array
+    increment = 0
+    
+    for number_of_runs in range(size): # #runs = size
+        for list_index in range(start, end, 1):
+            string_index = 0
+            original+=diags[list_index][string_index]
+        start-=1
+        end-=1
+    return original[::-1]
+
 def split_into_anti_diags(num:str):
     # can horizontally reflect string, then preform main diag funciton
     pass
@@ -185,4 +199,10 @@ def diaganols(num:str):
 
     return total
 
-#print(split_into_diags("011S10011001F110"))
+print(split_into_diags("011S10011001F110"))
+print("011S10011001F110")
+print(range(size))
+print(smash_diags(split_into_diags("011S10011001F110")))
+
+#print(smash_diags(['A', 'B', 'C', 'D', 'E', 'F', 'G']))
+#print(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
