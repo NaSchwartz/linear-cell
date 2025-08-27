@@ -159,7 +159,7 @@ def make_index_list(size:int):
             for j in range(0, i-1):
                 Next[j]+=1
         return total
-print(make_index_list(5))
+#print(make_index_list(5))
 
 def split_into_diags(num:str):
     # Indexing useful stuff
