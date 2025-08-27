@@ -18,6 +18,8 @@ def generate_moves(num : str):
     moves.update(generator.verticals(num))
     # diaganols - not yet installed
     moves.update(generator.diaganols(num))
+    # diaganols - not yet installed
+    moves.update(generator.anti_diaganols(num))
     return moves
 
 # print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)

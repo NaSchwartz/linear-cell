@@ -192,10 +192,6 @@ def smash_diags(diags):
         end-=1
     return original[::-1]
 
-def split_into_anti_diags(num:str):
-    # can horizontally reflect string, then preform main diag funciton
-    pass
-
 def diaganols(num:str):
     total = []
     # split the binary string into rows
@@ -221,11 +217,37 @@ def diaganols(num:str):
 
     return total
 
+def anti_diaganols(num:str):
+    total = []
+    # split the binary string into rows
+    num = positive_rotation(num)
+    diags = split_into_diags(num)
+    inc = 0
+    for diag in diags:
+        if diag.count("1") < 2:
+            inc += 1
+            continue
+        else:
+            # create the moves for each diag
+            for comb in multis(diag):
+                if len(comb) == 1:
+                    # diag is a single cell
+                    continue
+                #print(comb)
+                # smash the combinations back into the other diags
+                copy_diags = diags.copy()
+                copy_diags[inc] = comb
+                total.append(negative_rotation(smash_diags(copy_diags)))
+
+        inc += 1
+
+    return total
+
 #print(split_into_diags("ponmlkjihgfedcba"))
 #print("ponmlkjihgfedcba")
 #print(range(size))
 #print(smash_diags(split_into_diags("ponmlkjihgfedcba")))
 
-alist = [0,1,2]
-alist = [0] + alist
-print(alist)
+#alist = [0,1,2]
+#alist = [0] + alist
+#print(alist)
