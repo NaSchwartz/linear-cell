@@ -144,7 +144,9 @@ def corner(length:int):
     return alist
 
 def make_index_list(size:int):
-    if size == 4:
+    if size == 6:
+        return [5,4,3,2,1,0, 4,4,3,2,1,0, 3,3,3,2,1,0, 2,2,2,2,1,0, 1,1,1,1,1,0, 0,0,0,0,0,0]
+    elif size == 4:
         return [3,2,1,0, 2,2,1,0, 1,1,1,0, 0,0,0,0]
     elif size == 3:
         return [2,1,0, 1,1,0, 0,0,0]
