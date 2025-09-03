@@ -3,7 +3,7 @@
 from math import sqrt
 
 def set_size():
-    return 3
+    return 4
 
 def print_grid(num : str):
     size = sqrt(len(num))
