@@ -17,6 +17,12 @@ while True:
     try:
         Tools.optimal_move(cells)
     except:
-        print("invalid entry. Unrecognizable string, or incorrect size")
-    if input("type \'q\' to quit:\t") == "q":
+        print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
+    
+    u_inp = input("type \'q\' to quit or type \'m\' to see the memory:\t")
+    if u_inp == "q":
         break
+    elif u_inp == "m":
+        print()
+        print(Tools.memo)
+        print()

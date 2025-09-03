@@ -40,9 +40,12 @@ def symmetry_check(num : str):
     for i in rotations:
         output = is_this_in_memo(i)
         if output != None:
-            return output
+            return (output, i)
     return None
 
+#print(symmetry.normal_forms("0001"))
+#print(symmetry_check("0001"))
+#print(symmetry_check("0110"))
 
 #######################################
 #            Common States            #
@@ -51,12 +54,8 @@ def symmetry_check(num : str):
 # Enter known N/P-positions into memory
 def enter_commons(): 
     # False = N-pos     True = P-pos
-    memo.update({"0111": False})
     memo.update({"1011": False})
-    memo.update({"1101": False})
-    memo.update({"1110": False})
-    memo.update({"1111": True})
-enter_commons()
+#enter_commons()
 
 
 # Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
@@ -73,7 +72,8 @@ def is_p_position(num:str):
     symm = symmetry_check(num)
     if symm != None:
         print("time saved")
-        return symm
+        memo[symm[1]] = symm[0] 
+        return symm[0]
 
     # Firstly, check memo if already known
     #temp = memo.get(num)
@@ -91,7 +91,11 @@ def is_p_position(num:str):
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        return not any(is_p_position(state) for state in generate_moves(num))
+        result = not any(is_p_position(state) for state in generate_moves(num))
+
+        # Before we return, we should store the result into the memory
+        memo[num] = result
+        return result
 
 # for testing purposes only
 def np_pos(num:str):
@@ -117,3 +121,6 @@ def optimal_move(p_pos:str):
 #print_grid("111010001")
 #generator.split_into_diags("101010110")
 #np_pos("1111")
+
+#optimal_move("111111111")
+#print(memo)
