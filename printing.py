@@ -3,9 +3,9 @@
 from math import sqrt
 
 def set_size():
-    return 4
+    return 2
 
-def print_grid(num : str):
+def print_grid(num : str, include_string: bool = True):
     size = sqrt(len(num))
     cells = ["\u00B7", "\u25A1"]
     desc = ""
@@ -16,7 +16,10 @@ def print_grid(num : str):
         counter += 1
         if counter%size == 0 and counter !=size**2:
             desc+= "\n"
-    print(num)
+    if include_string:
+        print(num)
+    else:
+        print()
     print(desc)
 
 def print_moves(move_list):

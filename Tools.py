@@ -58,10 +58,6 @@ def enter_commons():
 #enter_commons()
 
 
-# Reduce a given state using symmetry           [DO THIS OPTIIZATION LATER]
-    # changes states into a single cannonical state
-    # flipping, rotating, and translating
-
 # Reduce a given state using isomorphisms       [DO THIS OPTIIZATION LAST!]
     # changes states into a single cannonical state
     # Ex: all C4 states -> ONE type of C4
@@ -71,7 +67,7 @@ def is_p_position(num:str):
     # First and foremost, check memory for symmetrical states
     symm = symmetry_check(num)
     if symm != None:
-        #print("time saved")
+        print("time saved")
         memo[symm[1]] = symm[0] 
         return symm[0]
 
@@ -101,10 +97,10 @@ def is_p_position(num:str):
 def np_pos(num:str):
     print_grid(num)
     if is_p_position(num):
-        print("P-position")
+        print("P-position\n")
         return True
     else:
-        print("N-position")
+        print("N-position\n")
         return False
 
 # main function to be used
@@ -124,3 +120,27 @@ def optimal_move(p_pos:str):
 
 #optimal_move("111111111")
 #print(memo)
+
+
+#######################################
+#            Memory Tools             #
+#######################################
+
+def print_p_pos():
+    for state in memo:
+        if memo[state]:
+            print(state)
+
+def print_p_pos_states():
+    for state in memo:
+        if memo[state]:
+            print_grid(state, False)
+
+def print_p_pos_cells(cell_cnt=0, visuals = False):
+    for state in memo:
+        if state.count("1")>=cell_cnt:
+            if memo[state]:
+                if visuals:
+                    print_grid(state, False)
+                else:
+                    print(state)
