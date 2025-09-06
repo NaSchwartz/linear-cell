@@ -30,11 +30,11 @@ while True:
             print(Tools.memo)
             print()
         elif u_inp == "p":
-            cells_cnt = int(input("type the minimum number of cells to be in each state (default 0):\t"))
+            cells_cnt =input("type the minimum number of cells to be in each state (default 0):\t")
             print()
             if not cells_cnt.strip():
-                cells_cnt = 0
+                cells_cnt = "0"
 
-            Tools.print_p_pos_cells(cells_cnt, input("type \'v\' to see visuals")=="v")
+            Tools.print_p_pos_cells(int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
     except:
-        print("\ninvalid entry. Enter an int<size**2 or just 0.\n")
+        print("\ninvalid entry.\n")

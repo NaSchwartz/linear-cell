@@ -67,7 +67,7 @@ def is_p_position(num:str):
     # First and foremost, check memory for symmetrical states
     symm = symmetry_check(num)
     if symm != None:
-        print("time saved")
+        #print("time saved")
         memo[symm[1]] = symm[0] 
         return symm[0]
 
@@ -106,7 +106,7 @@ def np_pos(num:str):
 # main function to be used
 def optimal_move(p_pos:str):
     for state in generate_moves(p_pos):
-        print(generate_moves(state))
+        #print(generate_moves(state))
         if np_pos(state):
             print("Done!")
             return
