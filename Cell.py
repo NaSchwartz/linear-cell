@@ -1,18 +1,23 @@
 import sys, Tools
 
+need_to_change_size = True
+
 while True:
-    # Standard analyzing loop
-    try:
-        size = int(input("Enter the side length of the square grid:\t"))
-        if size < 1:
-            raise Exception("")
-    except:
-        print("\ninvalid entry. size must be a natural number\n")
-        continue
+    # change the grid size
+    if need_to_change_size:
+        try:
+            size = int(input("Enter the side length of the square grid:\t"))
+            if size < 1:
+                raise Exception("")
+        except:
+            print("\ninvalid entry. size must be a natural number\n")
+            continue
+        need_to_change_size = False
     
-    cells = input("Please enter state to analyze:\t")
+    # Standard analyzing loop
+    state = input("Please enter state to analyze:\t")
     try:
-        Tools.optimal_move(cells, size)
+        Tools.optimal_move(state, size)
     except Exception as e:
         print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
         print(e)
@@ -24,7 +29,7 @@ while True:
         +"[ 1 ] See current memory\n"
         +"[ 2 ] Clear current memory\n"
         +"[ 3 ] See all p-positions found so far\n"
-        +"[ 4 ] Restart main loop\n"
+        +"[ 4 ] Change grid size\n"
         +"[ 5 ] Exit program\n"
         +"\nChoice:\t")
         match (u_inp):
@@ -44,6 +49,9 @@ while True:
                 Tools.print_p_pos_cells(int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
                 print()
             case "4":
+                need_to_change_size = True
                 break
             case "5":
                 sys.exit()
+            case _:
+                break

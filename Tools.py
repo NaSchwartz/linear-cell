@@ -101,8 +101,17 @@ def np_pos(num:str, size:int):
         return False
 
 # main function to be used
-def optimal_move(p_pos:str, size:int):
-    for state in generate_moves(p_pos, size):
+def optimal_move(state:str, size:int):
+    # First check if this is in the memory already
+    if state in memo:
+        if memo[state]:
+            print("\nThis P-position is in the memory already!\n")
+        else:
+            print("\nThis N-position is in the memory already!\n")
+        return
+
+    # Otherwise do the depth first search
+    for state in generate_moves(state, size):
         #print(generate_moves(state))
         if np_pos(state, size):
             print("Done!")
