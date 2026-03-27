@@ -5,10 +5,7 @@ from itertools import combinations
 from symmetry import positive_rotation, negative_rotation
 import symmetry
 # testing + printing
-from printing import print_grid, print_moves, set_size
-
-# Grid size
-size = set_size()
+from printing import print_grid, print_moves
 
 def multis(num:str):
     # Consturction of positions of the ones list
@@ -63,16 +60,16 @@ def singles_list(num:str):
 #           Horizontal          #
 #################################
 
-def split_into_rows(num:str):
+def split_into_rows(num:str, size):
     rows = [""]*size
     for i in range(size):
         rows[i] = num[i*size:i*size+size]
     return rows
 
-def horizontals(num:str): 
+def horizontals(num:str, size): 
     horiz = []
     # split the binary string into rows
-    rows = split_into_rows(num)
+    rows = split_into_rows(num, size)
     inc = 0
     for row in rows:
         if row.count("1") < 2:
@@ -100,12 +97,12 @@ def horizontals(num:str):
 #           Vertical            #
 #################################
 
-def verticals(num:str):
-    num2 = positive_rotation(num)
-    temp = horizontals(num2)
+def verticals(num:str, size:int):
+    num2 = positive_rotation(num, size)
+    temp = horizontals(num2, size)
     vert = []
     for grid in temp:
-        vert.append(negative_rotation(grid))
+        vert.append(negative_rotation(grid, size))
     return vert
 
 #print(horizontals("001001001"))
@@ -163,7 +160,7 @@ def make_index_list(size:int):
         return total
 #print(make_index_list(5))
 
-def split_into_diags(num:str):
+def split_into_diags(num:str, size:int):
     # Indexing useful stuff
     diags = [""]*(size+size-1)
     ranges = pyramid(size)
@@ -179,7 +176,7 @@ def split_into_diags(num:str):
             increment += size + 1
     return diags
 
-def smash_diags(diags):
+def smash_diags(diags, size:int):
     original = ""
     start = size - 1 # this is the middle index of the array
     end = size*2 - 1 # this is the end index of the array
@@ -194,10 +191,10 @@ def smash_diags(diags):
         end-=1
     return original[::-1]
 
-def diaganols(num:str):
+def diaganols(num:str, size:int):
     total = []
     # split the binary string into rows
-    diags = split_into_diags(num)
+    diags = split_into_diags(num, size)
     inc = 0
     for diag in diags:
         if diag.count("1") < 2:
@@ -213,17 +210,17 @@ def diaganols(num:str):
                 # smash the combinations back into the other diags
                 copy_diags = diags.copy()
                 copy_diags[inc] = comb
-                total.append(smash_diags(copy_diags))
+                total.append(smash_diags(copy_diags, size))
 
         inc += 1
 
     return total
 
-def anti_diaganols(num:str):
+def anti_diaganols(num:str, size:int):
     total = []
     # split the binary string into rows
-    num = positive_rotation(num)
-    diags = split_into_diags(num)
+    num = positive_rotation(num, size)
+    diags = split_into_diags(num, size)
     inc = 0
     for diag in diags:
         if diag.count("1") < 2:
@@ -239,7 +236,7 @@ def anti_diaganols(num:str):
                 # smash the combinations back into the other diags
                 copy_diags = diags.copy()
                 copy_diags[inc] = comb
-                total.append(negative_rotation(smash_diags(copy_diags)))
+                total.append(negative_rotation(smash_diags(copy_diags, size), size))
 
         inc += 1
 

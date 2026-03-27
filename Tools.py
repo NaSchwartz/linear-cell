@@ -1,25 +1,22 @@
 import generator, symmetry
 from printing import print_grid, set_size
 
-# Grid size
-size = set_size()
-
 #######################################
 #           Move Generation           #
 #######################################
 
-def generate_moves(num : str):
+def generate_moves(num : str, size : int):
     moves = set()
     # singles
     moves.update(generator.singles_list(num))
     # horizontals
-    moves.update(generator.horizontals(num))
+    moves.update(generator.horizontals(num, size))
     # verticals
-    moves.update(generator.verticals(num))
+    moves.update(generator.verticals(num, size))
     # diaganols - not yet installed
-    moves.update(generator.diaganols(num))
+    moves.update(generator.diaganols(num, size))
     # diaganols - not yet installed
-    moves.update(generator.anti_diaganols(num))
+    moves.update(generator.anti_diaganols(num, size))
     return moves
 
 # print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
@@ -35,8 +32,8 @@ memo = {}
 def is_this_in_memo(num : str):
     return memo.get(num)
 
-def symmetry_check(num : str):
-    rotations = symmetry.normal_forms(num)
+def symmetry_check(num : str, size : int):
+    rotations = symmetry.normal_forms(num, size)
     for i in rotations:
         output = is_this_in_memo(i)
         if output != None:
@@ -62,10 +59,10 @@ def enter_commons():
     # changes states into a single cannonical state
     # Ex: all C4 states -> ONE type of C4
 
-def is_p_position(num:str):
+def is_p_position(num:str, size:int):
     
     # First and foremost, check memory for symmetrical states
-    symm = symmetry_check(num)
+    symm = symmetry_check(num, size)
     if symm != None:
         #print("time saved")
         memo[symm[1]] = symm[0] 
@@ -87,16 +84,16 @@ def is_p_position(num:str):
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        result = not any(is_p_position(state) for state in generate_moves(num))
+        result = not any(is_p_position(state, size) for state in generate_moves(num, size))
 
         # Before we return, we should store the result into the memory
         memo[num] = result
         return result
 
 # for testing purposes only
-def np_pos(num:str):
+def np_pos(num:str, size:int):
     print_grid(num)
-    if is_p_position(num):
+    if is_p_position(num, size):
         print("P-position\n")
         return True
     else:
@@ -104,10 +101,10 @@ def np_pos(num:str):
         return False
 
 # main function to be used
-def optimal_move(p_pos:str):
-    for state in generate_moves(p_pos):
+def optimal_move(p_pos:str, size:int):
+    for state in generate_moves(p_pos, size):
         #print(generate_moves(state))
-        if np_pos(state):
+        if np_pos(state, size):
             print("Done!")
             return
     print("You are in a P-position! :( So much wasted time and computation!")

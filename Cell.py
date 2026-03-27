@@ -14,11 +14,21 @@ import Tools
 
 while True:
     # Standard analyzing loop
+    try:
+        size = int(input("Enter the side length of the square grid:\t"))
+        if size < 1:
+            raise Exception("")
+    except:
+        print("\ninvalid entry. size must be a natural number\n")
+        continue
+    
     cells = input("Please enter state to analyze:\t")
     try:
-        Tools.optimal_move(cells)
-    except:
+        Tools.optimal_move(cells, size)
+    except Exception as e:
         print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
+        print(e)
+        exit()
     
     # post-analyzation, fun visuals and useful records for the user
     try:

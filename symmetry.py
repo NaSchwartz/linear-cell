@@ -1,26 +1,22 @@
 from printing import print_grid, set_size
 
-# Grid size
-size = set_size()
-
-
 #################################
-#           Translation         #
+#           Translation         # size
 #################################
 
-def translate_down(num : str) -> str :
+def translate_down(num : str, size : int) -> str :
     if num[:size] == "0"*size:
         return num[size:] + "0"*size
     else:
         return num
 
-def translate_up(num : str) -> str :
+def translate_up(num : str, size : int) -> str :
     if num[-size:] == "0"*size:
         return "0"*size + num[:-size]
     else:
         return num
 
-def translate_right(num : str) -> str :
+def translate_right(num : str, size : int) -> str :
     check = ""
     for i in range(size):
         check += num[i * size]
@@ -29,7 +25,7 @@ def translate_right(num : str) -> str :
     else:
         return num
 
-def translate_left(num : str) -> str :
+def translate_left(num : str, size : int) -> str :
     check = ""
     for i in range(size):
         check += num[i*size + size-1]
@@ -51,10 +47,10 @@ def translate_left(num : str) -> str :
 #################################
 
 # 3x3 example
-def vert_reflection3x3(num : str) -> str :
+def vert_reflection3x3(num : str, size : int) -> str :
     return num[-size:] + num[size:-size] + num[:size]
 # 3x3 example
-def horz_reflection3x3(num : str) -> str :
+def horz_reflection3x3(num : str, size : int) -> str :
     left = ""
     right = ""
     center = ""
@@ -70,7 +66,7 @@ def horz_reflection3x3(num : str) -> str :
 
 
 # General vertical reflection
-def vert_reflection(num : str) -> str :
+def vert_reflection(num : str, size : int) -> str :
     # Split the "grid" into rows
     rows = [""]*size
     for i in range(size):
@@ -83,7 +79,7 @@ def vert_reflection(num : str) -> str :
     return desc
 
 # General horizontal reflection
-def horz_reflection(num : str) -> str :
+def horz_reflection(num : str, size : int) -> str :
     # Split the "grid" into columns
     columns = [""]*size
     for i in range(size):
@@ -108,7 +104,7 @@ def horz_reflection(num : str) -> str :
 #################################
 
 # columns into rows (counter-clockwise)
-def positive_rotation(num : str) -> str :
+def positive_rotation(num : str, size : int) -> str :
     # Split the "grid" into columns
     columns = [""]*size
     for i in range(size):
@@ -122,7 +118,7 @@ def positive_rotation(num : str) -> str :
     return desc
 
 # rows into columns (clockwise)
-def negative_rotation(num : str) -> str :
+def negative_rotation(num : str, size : int) -> str :
     # Split the "grid" into rows
     rows = [""]*size
     for i in range(size):
@@ -145,33 +141,33 @@ def negative_rotation(num : str) -> str :
 #           Normal Form         #
 #################################
 
-def normal_forms(num : str):
+def normal_forms(num : str, size : int):
     forms = ["","","",""]
     curr = num
     for i in range(len(forms)):
         forms[i] = curr
-        forms[i] = move_to_bot_right(forms[i])
-        curr = positive_rotation(curr)
+        forms[i] = move_to_bot_right(forms[i], size)
+        curr = positive_rotation(curr, size)
     return forms
 
-def move_to_bot_right(num : str) -> str :
+def move_to_bot_right(num : str, size : int) -> str :
     prev = num
-    curr = translate_down(num)
+    curr = translate_down(num, size)
     while True:
         if prev == curr:
             break
         else:
             prev = curr
-            curr = translate_down(curr)
+            curr = translate_down(curr, size)
     
     prev = curr
-    curr = translate_right(curr)
+    curr = translate_right(curr, size)
     while True:
         if prev == curr:
             break
         else:
             prev = curr
-            curr = translate_right(curr)
+            curr = translate_right(curr, size)
     
     return curr
 
