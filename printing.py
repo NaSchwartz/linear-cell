@@ -1,9 +1,4 @@
-# printing functions that are used for testing 
-
 from math import sqrt
-
-def set_size():
-    return 5
 
 def print_grid(num : str, include_string: bool = True):
     size = sqrt(len(num))

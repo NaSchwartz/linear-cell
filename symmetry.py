@@ -1,4 +1,4 @@
-from printing import print_grid, set_size
+from printing import print_grid
 
 #################################
 #           Translation         # size

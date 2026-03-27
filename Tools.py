@@ -1,5 +1,5 @@
 import generator, symmetry
-from printing import print_grid, set_size
+from printing import print_grid
 
 #######################################
 #           Move Generation           #
@@ -141,3 +141,6 @@ def print_p_pos_cells(cell_cnt=0, visuals = False):
                     print_grid(state, False)
                 else:
                     print(state)
+
+def clear_memory():
+    memo.clear()

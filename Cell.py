@@ -1,16 +1,4 @@
-# Ignore this
-
-import sys
-import Tools
-# arrays where each entry takes up a single bit
-# from bitarray import bitarray
-
-#bits = bitarray('00101101') 
-#print(bits)
-
-#Tools.optimal_move("100111111")
-
-#ol.(
+import sys, Tools
 
 while True:
     # Standard analyzing loop
@@ -28,23 +16,34 @@ while True:
     except Exception as e:
         print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
         print(e)
-        exit()
+        sys.exit()
     
     # post-analyzation, fun visuals and useful records for the user
-    try:
-        u_inp = input("type \'q\' to quit, \'m\' to see the memory, or \'p\' to see all p-positions found so far:\t")
-        if u_inp == "q":
-            break
-        elif u_inp == "m":
-            print()
-            print(Tools.memo)
-            print()
-        elif u_inp == "p":
-            cells_cnt =input("type the minimum number of cells to be in each state (default 0):\t")
-            print()
-            if not cells_cnt.strip():
-                cells_cnt = "0"
-
-            Tools.print_p_pos_cells(int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
-    except:
-        print("\ninvalid entry.\n")
+    while True:
+        u_inp = input("Post-analyzation. Enter a number to select that option, all other entires will restart the main loop.\n"
+        +"[ 1 ] See current memory\n"
+        +"[ 2 ] Clear current memory\n"
+        +"[ 3 ] See all p-positions found so far\n"
+        +"[ 4 ] Restart main loop\n"
+        +"[ 5 ] Exit program\n"
+        +"\nChoice:\t")
+        match (u_inp):
+            case "1":
+                print("Flase = N-Position, True = P-Position")
+                print(Tools.memo)
+                print()
+            case "2":
+                Tools.clear_memory()
+                print("\nMemory cleared!\n")
+            case "3":
+                cells_cnt = input("type the minimum number of cells to be in each state (default 0):\t")
+                print()
+                if not cells_cnt.strip():
+                    cells_cnt = "0"
+                # Either display binary encodings or the pictures.
+                Tools.print_p_pos_cells(int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
+                print()
+            case "4":
+                break
+            case "5":
+                sys.exit()
