@@ -114,9 +114,9 @@ def optimal_move(state:str, size:int):
     for state in generate_moves(state, size):
         #print(generate_moves(state))
         if np_pos(state, size):
-            print("Done!")
+            print("You are in an N-Position! The move directy above is a P-position")
             return
-    print("You are in a P-position! :( So much wasted time and computation!")
+    print("You are in a P-position! If it's you're turn, you're losing :(")
 
 
 
@@ -153,3 +153,15 @@ def print_p_pos_cells(cell_cnt=0, visuals = False):
 
 def clear_memory():
     memo.clear()
+
+#######################################
+#            Miscellaneous            #
+#######################################
+
+import random
+
+def random_state(size):
+    state = ""
+    for i in range(size**2):
+        state += str(random.randint(0, 1))
+    return state

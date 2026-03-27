@@ -1,4 +1,4 @@
-import sys, Tools
+import sys, printing, Tools, traceback
 
 need_to_change_size = True
 
@@ -15,13 +15,13 @@ while True:
         need_to_change_size = False
     
     # Standard analyzing loop
-    state = input("Please enter state to analyze:\t")
+    state = input(f"Please enter state to analyze (size: {size}):\t")
     try:
         Tools.optimal_move(state, size)
     except Exception as e:
         print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
-        print(e)
-        sys.exit()
+        traceback.print_exc()
+        #sys.exit()
     
     # post-analyzation, fun visuals and useful records for the user
     while True:
@@ -30,7 +30,8 @@ while True:
         +"[ 2 ] Clear current memory\n"
         +"[ 3 ] See all p-positions found so far\n"
         +"[ 4 ] Change grid size\n"
-        +"[ 5 ] Exit program\n"
+        +"[ 5 ] Generate a randdom state for this size\n"
+        +"[ 6 ] Exit program\n"
         +"\nChoice:\t")
         match (u_inp):
             case "1":
@@ -52,6 +53,10 @@ while True:
                 need_to_change_size = True
                 break
             case "5":
+                state = Tools.random_state(size)
+                printing.print_grid(state)
+                print()
+            case "6":
                 sys.exit()
             case _:
                 break
