@@ -27,9 +27,10 @@ while True:
         u_inp = input("Post-analyzation. Enter a number to select that option, all other entires will restart the main loop.\n"
         +"[ 1 ] See current memory\n"
         +"[ 2 ] Analyze ALL STATES for this grid size\n"
-        +"[ 3 ] See all p-positions found so far\n"
-        +"[ 4 ] Generate a randdom state for this size\n"
-        +"[ 5 ] Exit program\n"
+        +"[ 3 ] See all P-positions found so far\n"
+        +"[ 4 ] Export all knonw P-positions to a text file\n"
+        +"[ 5 ] Generate a randdom state for this size\n"
+        +"[ 6 ] Exit program\n"
         +"\nChoice:\t")
         match (u_inp):
             case "1":
@@ -51,10 +52,15 @@ while True:
                 Tools.print_p_pos_cells(size, int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
                 print()
             case "4":
+                filename = input("Enter the name of your text file (inclucde \".txt\"):\t")
+                print()
+                Tools.export_p_positions_txt(size, filename, input("Enter the delimiter to use:\t"))
+                print()
+            case "5":
                 state = Tools.random_state(size)
                 printing.print_grid(state)
                 print()
-            case "5":
+            case "6":
                 sys.exit()
             case _:
                 break

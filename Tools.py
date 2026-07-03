@@ -32,7 +32,6 @@ def create_memory(size:int):
 
 grid_side_length = 2
 memo = bitarray(2**((grid_side_length**2)+1))
-print(len(memo))
 
 
 #######################################
@@ -167,11 +166,13 @@ def print_p_pos_cells(size:int, cell_cnt=0, visuals = False):
     while i < 2**((size**2)):
         if memo[2*i] and memo[(2*i)+1]:
             state = to_string(size, i)
-            if visuals:
-                print_grid(state, False)
-            else:
-                print(state)
+            if state.count("1")>=cell_cnt:
+                if visuals:
+                    print_grid(state, False)
+                else:
+                    print(state)
         i += 1
+
 def clear_memory():
     memo.clear()
 
@@ -190,7 +191,16 @@ def random_state(size):
 def analyze_all_states(size:int):
     i = 0
     while i < 2**((size**2)):
-        print(i)
         if not memo[2*i]:
             is_p_position(to_string(size, i),size)
         i += 1
+
+def export_p_positions_txt(size:int, filename:str, delimiter:str):
+    file = open(filename, 'w')
+    i = 0
+    while i < 2**((size**2)):
+        if memo[2*i] and memo[(2*i)+1]:
+            state = to_string(size, i)
+            file.write(state + delimiter)
+        i += 1
+    file.close()
