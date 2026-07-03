@@ -204,3 +204,22 @@ def export_p_positions_txt(size:int, filename:str, delimiter:str):
             file.write(state + delimiter)
         i += 1
     file.close()
+
+def list_searching_statistics(size:int):
+    p_pos_count = 0
+    n_pos_count = 0
+    total_states = 2**((size**2))
+    i = 0
+    while i < total_states:
+        if memo[2*i]:
+            if memo[2*i+1]:
+                p_pos_count += 1
+            n_pos_count += 1
+        i += 1
+    known_states = p_pos_count + n_pos_count
+    print(f"Searching Statistics for an {size}x{size} board\n"
+         +f"Total states: {total_states}\n"
+         +f"states analyzed: {known_states}\n"
+         +f"P-positions found: {p_pos_count}\n"
+         +f"N-positions found: {n_pos_count}\n"
+         +f"States left to analyze: {total_states-known_states}\n")
