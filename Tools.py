@@ -30,7 +30,7 @@ def create_memory(size:int):
     total = 2 ** (size**2)
     memo = bitarray(total)
 
-grid_side_length = 2
+grid_side_length = 4
 memo = bitarray(2**((grid_side_length**2)+1))
 
 
@@ -214,12 +214,15 @@ def list_searching_statistics(size:int):
         if memo[2*i]:
             if memo[2*i+1]:
                 p_pos_count += 1
-            n_pos_count += 1
+            else:
+                n_pos_count += 1
         i += 1
     known_states = p_pos_count + n_pos_count
     print(f"Searching Statistics for an {size}x{size} board\n"
          +f"Total states: {total_states}\n"
-         +f"states analyzed: {known_states}\n"
+         +f"States analyzed: {known_states}\n"
          +f"P-positions found: {p_pos_count}\n"
          +f"N-positions found: {n_pos_count}\n"
-         +f"States left to analyze: {total_states-known_states}\n")
+         +f"Trivial states skipped: {(size*size)+1}\n"
+         +f"States left to analyze: {(total_states-known_states)-(size*size)-1}\n")
+    # A crazy expression is used above because the states with 1 or 0 cells are skipped over.
