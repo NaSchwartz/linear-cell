@@ -1,5 +1,6 @@
 import generator, symmetry
 from printing import print_grid
+from bitarray import bitarray
 
 #######################################
 #           Move Generation           #
@@ -21,7 +22,17 @@ def generate_moves(num : str, size : int):
 
 # print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
 
-memo = {}
+def create_memory(size:int):
+    # Memory is a two bit bit array:
+    # 1st bit is the "was this state analyzed" bool
+    # 2nd bit it the "is this a P-position" bool
+    # state n \mapsto position 2n and 2n+1
+    total = 2 ** (size**2)
+    memo = bitarray(total)
+
+grid_side_length = 2
+memo = bitarray(2**((grid_side_length**2)+1))
+print(len(memo))
 
 
 #######################################
@@ -30,7 +41,7 @@ memo = {}
 
 
 def is_this_in_memo(num : str):
-    return memo.get(num)
+    return memo[2*int(num,2)]
 
 def symmetry_check(num : str, size : int):
     rotations = symmetry.normal_forms(num, size)
@@ -49,11 +60,6 @@ def symmetry_check(num : str, size : int):
 #######################################
 
 # Enter known N/P-positions into memory
-def enter_commons(): 
-    # False = N-pos     True = P-pos
-    memo.update({"1011": False})
-#enter_commons()
-
 
 # Reduce a given state using isomorphisms       [DO THIS OPTIIZATION LAST!]
     # changes states into a single cannonical state
@@ -62,17 +68,16 @@ def enter_commons():
 def is_p_position(num:str, size:int):
     
     # First and foremost, check memory for symmetrical states
-    symm = symmetry_check(num, size)
-    if symm != None:
-        #print("time saved")
-        memo[symm[1]] = symm[0] 
-        return symm[0]
+    # symm = symmetry_check(num, size)
+    # if symm != None:
+    #     #print("time saved")
+    #     memo[symm[1]] = symm[0] 
+    #     return symm[0]
 
     # Firstly, check memo if already known
-    #temp = memo.get(num)
-    #if temp != None:
-    #    print("time saved")
-    #    return temp
+    if memo[2*int(num,2)]:
+        # print("Time saved")
+        return memo[(2*int(num,2))+1]
 
     # base case: P-position
     if num == "0"*size**2:
@@ -87,7 +92,8 @@ def is_p_position(num:str, size:int):
         result = not any(is_p_position(state, size) for state in generate_moves(num, size))
 
         # Before we return, we should store the result into the memory
-        memo[num] = result
+        memo[(2*int(num,2))] = 1
+        memo[(2*int(num,2))+1] = int(result)
         return result
 
 # for testing purposes only
@@ -103,8 +109,8 @@ def np_pos(num:str, size:int):
 # main function to be used
 def optimal_move(state:str, size:int):
     # First check if this is in the memory already
-    if state in memo:
-        if memo[state]:
+    if memo[2*int(state,2)]:
+        if memo[(2*int(state,2))+1]:
             print("\nThis P-position is in the memory already!\n")
         else:
             print("\nThis N-position is in the memory already!\n")
@@ -132,25 +138,40 @@ def optimal_move(state:str, size:int):
 #            Memory Tools             #
 #######################################
 
+def to_string(size:int, num:int):
+    state = bin(num)[2:]
+    return "0"*(max((size**2)-len(state),0)) + state
+
 def print_p_pos():
-    for state in memo:
-        if memo[state]:
+    i = 0
+    while i < 2**((size**2)+1):
+        if memo[i]:
             print(state)
 
-def print_p_pos_states():
-    for state in memo:
-        if memo[state]:
-            print_grid(state, False)
+# def print_p_pos_states():
+#     for state in memo:
+#         if memo[state]:
+#             print_grid(state, False)
 
-def print_p_pos_cells(cell_cnt=0, visuals = False):
-    for state in memo:
-        if state.count("1")>=cell_cnt:
-            if memo[state]:
-                if visuals:
-                    print_grid(state, False)
-                else:
-                    print(state)
+# def print_p_pos_cells(cell_cnt=0, visuals = False):
+#     for state in memo:
+#         if state.count("1")>=cell_cnt:
+#             if memo[state]:
+#                 if visuals:
+#                     print_grid(state, False)
+#                 else:
+#                     print(state)
 
+def print_p_pos_cells(size:int, cell_cnt=0, visuals = False):
+    i = 0
+    while i < 2**((size**2)):
+        if memo[2*i] and memo[(2*i)+1]:
+            state = to_string(size, i)
+            if visuals:
+                print_grid(state, False)
+            else:
+                print(state)
+        i += 1
 def clear_memory():
     memo.clear()
 
@@ -165,3 +186,11 @@ def random_state(size):
     for i in range(size**2):
         state += str(random.randint(0, 1))
     return state
+
+def analyze_all_states(size:int):
+    i = 0
+    while i < 2**((size**2)):
+        print(i)
+        if not memo[2*i]:
+            is_p_position(to_string(size, i),size)
+        i += 1
