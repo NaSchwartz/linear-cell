@@ -3,11 +3,11 @@ import sys, os, traceback, printing, Tools
 # print(int("10111",2))
 # sys.exit()
 
-def standard_analyzing_loop():
+def standard_analyzing_loop(memory):
     # Standard analyzing loop
         state = input(f"Please enter state to analyze (size: {size}):\t")
         try:
-            Tools.optimal_move(state, size)
+            Tools.optimal_move(state, size, memory)
         except Exception as e:
             print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
             traceback.print_exc()
@@ -28,7 +28,11 @@ if __name__ == "__main__":
             print("\ninvalid entry. size must be a natural number\n")
             continue
         
-        standard_analyzing_loop()
+        # create memory and Cell.py memory """pointer"""
+        memory = Tools.create_memory(size)
+
+        # User enters a state, analyze it
+        standard_analyzing_loop(memory)
         
         # post-analyzation, fun visuals and useful records for the user
         while True:
@@ -45,21 +49,22 @@ if __name__ == "__main__":
             os.system("clear")
             match (u_inp):
                 case "0":
-                    Tools.list_searching_statistics(size)
+                    Tools.list_searching_statistics(size, memory)
                     print()
                 case "1":
-                    standard_analyzing_loop()
+                    standard_analyzing_loop(memory)
                 case "2":
                     print("Flase = N-Position, True = P-Position")
-                    print(Tools.memo)
+                    print(memory)
                     print()
                 case "3":
                     print()
                     print("Please be patient, this may take some time...")
                     try:
-                        Tools.analyze_all_states(size)
+                        Tools.analyze_all_states(size, memory)
                     except:
                         print("\nWARNING Something went wrong (you probably interupted the process)\n")
+                        traceback.print_exc()
 
                     print("Done!")
                     print()
@@ -69,12 +74,12 @@ if __name__ == "__main__":
                     if not cells_cnt.strip():
                         cells_cnt = "0"
                     # Either display binary encodings or the pictures.
-                    Tools.print_p_pos_cells(size, int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
+                    Tools.print_p_pos_cells(size, memory, int(cells_cnt), input("type \'v\' to see visuals:\t")=="v")
                     print()
                 case "5":
                     filename = input("Enter the name of your text file (inclucde \".txt\"):\t")
                     print()
-                    Tools.export_p_positions_txt(size, filename, input("Enter the delimiter to use:\t"))
+                    Tools.export_p_positions_txt(size, filename, input("Enter the delimiter to use:\t"), memory)
                     print()
                 case "6":
                     state = Tools.random_state(size)

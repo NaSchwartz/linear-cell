@@ -6,6 +6,7 @@ from bitarray import bitarray
 #           Move Generation           #
 #######################################
 
+# holy hell, turn those functions into actual generators. 
 def generate_moves(num : str, size : int):
     moves = set()
     # singles
@@ -27,51 +28,37 @@ def create_memory(size:int):
     # 1st bit is the "was this state analyzed" bool
     # 2nd bit it the "is this a P-position" bool
     # state n \mapsto position 2n and 2n+1
-    total = 2 ** (size**2)
-    memo = bitarray(total)
+    total = 2 ** ((size**2)+1)
+    memory = bitarray(total)
 
-grid_side_length = 4
-memo = bitarray(2**((grid_side_length**2)+1))
+    return memory
 
 
 #######################################
 #        Symetry Optimization         #
 #######################################
 
-
-def is_this_in_memo(num : str):
+# Check to see if a state is in the memory
+def is_this_in_memo(num : str, memo):
     return memo[2*int(num,2)]
 
-def symmetry_check(num : str, size : int):
-    rotations = symmetry.normal_forms(num, size)
-    for i in rotations:
-        output = is_this_in_memo(i)
-        if output != None:
-            return (output, i)
-    return None
+# Given a state (in str form) and it's p-pos result, store it into memory
+def store_into_memory(state:str, is_p_pos:bool, memo):
+    memo[(2*int(state,2))] = 1
+    memo[(2*int(state,2))+1] = int(is_p_pos)
 
-#print(symmetry.normal_forms("0001"))
-#print(symmetry_check("0001"))
-#print(symmetry_check("0110"))
 
 #######################################
-#            Common States            #
+#            The Algorithm            #
 #######################################
-
-# Enter known N/P-positions into memory
 
 # Reduce a given state using isomorphisms       [DO THIS OPTIIZATION LAST!]
     # changes states into a single cannonical state
     # Ex: all C4 states -> ONE type of C4
 
-def is_p_position(num:str, size:int):
-    
-    # First and foremost, check memory for symmetrical states
-    # symm = symmetry_check(num, size)
-    # if symm != None:
-    #     #print("time saved")
-    #     memo[symm[1]] = symm[0] 
-    #     return symm[0]
+
+# Determine if a board state is a p-pos, and store result into memory
+def is_p_position(num:str, size:int, memo) -> bool:
 
     # Firstly, check memo if already known
     if memo[2*int(num,2)]:
@@ -88,37 +75,39 @@ def is_p_position(num:str, size:int):
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        result = not any(is_p_position(state, size) for state in generate_moves(num, size))
+        result = not any(is_p_position(state, size, memo) for state in generate_moves(num, size))
 
-        # Before we return, we should store the result into the memory
-        memo[(2*int(num,2))] = 1
-        memo[(2*int(num,2))+1] = int(result)
+        # Store the result into the memory
+        store_into_memory(num, result, memo)
+        # Store all equivalent states into memory also
+
         return result
 
 # for testing purposes only
-def np_pos(num:str, size:int):
+def np_pos(num:str, size:int, memo):
     print_grid(num)
-    if is_p_position(num, size):
+    if is_p_position(num, size, memo):
         print("P-position\n")
         return True
     else:
         print("N-position\n")
         return False
 
-# main function to be used
-def optimal_move(state:str, size:int):
+# Find the best move in the position (to reduce N-pos to P-pos)
+def optimal_move(state:str, size:int, memo):
     # First check if this is in the memory already
     if memo[2*int(state,2)]:
+        print_grid(state, False)
+        # if it's a known P-position, all done
         if memo[(2*int(state,2))+1]:
             print("\nThis P-position is in the memory already!\n")
-        else:
-            print("\nThis N-position is in the memory already!\n")
-        return
+            return
+        # if it's a known N-position, we need to find the best move
 
     # Otherwise do the depth first search
     for state in generate_moves(state, size):
         #print(generate_moves(state))
-        if np_pos(state, size):
+        if np_pos(state, size, memo):
             print("You are in an N-Position! The move directy above is a P-position")
             return
     print("You are in a P-position! If it's you're turn, you're losing :(")
@@ -141,7 +130,7 @@ def to_string(size:int, num:int):
     state = bin(num)[2:]
     return "0"*(max((size**2)-len(state),0)) + state
 
-def print_p_pos():
+def print_p_pos(memo):
     i = 0
     while i < 2**((size**2)+1):
         if memo[i]:
@@ -161,7 +150,7 @@ def print_p_pos():
 #                 else:
 #                     print(state)
 
-def print_p_pos_cells(size:int, cell_cnt=0, visuals = False):
+def print_p_pos_cells(size:int, memo, cell_cnt=0, visuals = False):
     i = 0
     while i < 2**((size**2)):
         if memo[2*i] and memo[(2*i)+1]:
@@ -188,14 +177,14 @@ def random_state(size):
         state += str(random.randint(0, 1))
     return state
 
-def analyze_all_states(size:int):
+def analyze_all_states(size:int, memo):
     i = 0
     while i < 2**((size**2)):
         if not memo[2*i]:
-            is_p_position(to_string(size, i),size)
+            is_p_position(to_string(size, i),size, memo)
         i += 1
 
-def export_p_positions_txt(size:int, filename:str, delimiter:str):
+def export_p_positions_txt(size:int, filename:str, delimiter:str, memo):
     file = open(filename, 'w')
     i = 0
     while i < 2**((size**2)):
@@ -205,7 +194,7 @@ def export_p_positions_txt(size:int, filename:str, delimiter:str):
         i += 1
     file.close()
 
-def list_searching_statistics(size:int):
+def list_searching_statistics(size:int, memo):
     p_pos_count = 0
     n_pos_count = 0
     total_states = 2**((size**2))
