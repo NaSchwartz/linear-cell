@@ -11,7 +11,7 @@ def standard_analyzing_loop(memory):
         except Exception as e:
             print("\ninvalid entry. Unrecognizable string, or incorrect size\n")
             traceback.print_exc()
-            #sys.exit()
+            sys.exit()
 
 ################################
 # Main

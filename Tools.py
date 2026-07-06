@@ -48,7 +48,7 @@ def store_rotations(state:str, size:int, is_p_pos:bool, memo):
     for rot_state in states:
         store_into_memory(rot_state, is_p_pos, memo)
 
-    print("rotation time saved!")
+    # print("rotation time saved!")
 
 #######################################
 #            The Algorithm            #
@@ -60,12 +60,16 @@ def store_rotations(state:str, size:int, is_p_pos:bool, memo):
 
 
 # Determine if a board state is a p-pos, and store result into memory
-def is_p_position(num:str, size:int, memo) -> bool:
+def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:bool = False) -> bool:
 
     # Firstly, check memo if already known
-    if memo[2*int(num,2)]:
-        # print("Time saved")
-        return memo[(2*int(num,2))+1]
+    # Bypass this step if we need an optimal move for an N-posiiton already in the memory
+    if not first_memo_bypass:
+        
+        if memo[2*int(num,2)]:
+            # print("Time saved")
+            return memo[(2*int(num,2))+1]
+        first_memo_bypass = False
 
     # base case: P-position
     if num == "0"*size**2:
@@ -77,7 +81,15 @@ def is_p_position(num:str, size:int, memo) -> bool:
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        result = not any(is_p_position(state, size, memo) for state in generate_moves(num, size))
+        result = not any(is_p_position(state, size, do_printing, memo, first_memo_bypass) for state in generate_moves(num, size))
+
+        # Do printing if told to do so
+        if do_printing:
+            print_grid(num)
+            if result:
+                print("P-position")
+            else:
+                print("N-Position") 
 
         # Store the result into the memory
         store_into_memory(num, result, memo)
@@ -85,43 +97,24 @@ def is_p_position(num:str, size:int, memo) -> bool:
         store_rotations(num, size, result, memo)
         return result
 
-# for testing purposes only
-def np_pos(num:str, size:int, memo):
-    print_grid(num)
-    if is_p_position(num, size, memo):
-        print("P-position\n")
-        return True
-    else:
-        print("N-position\n")
-        return False
-
 # Find the best move in the position (to reduce N-pos to P-pos)
 def optimal_move(state:str, size:int, memo):
+    bypass = False
     # First check if this is in the memory already
     if memo[2*int(state,2)]:
-        print_grid(state, False)
+        bypass = True
         # if it's a known P-position, all done
         if memo[(2*int(state,2))+1]:
-            print("\nThis P-position is in the memory already!\n")
+            print_grid(state)
+            print("(Entered state)\n\nThis P-position is in the memory already!\n")
             return
         # if it's a known N-position, we need to find the best move
 
-    # Otherwise do the depth first search
-    for state in generate_moves(state, size):
-        #print(generate_moves(state))
-        if np_pos(state, size, memo):
-            print("You are in an N-Position! The move directy above is a P-position")
-            return
-    print("You are in a P-position! If it's you're turn, you're losing :(")
-
-
-
-#print_grid("111010001")
-#generator.split_into_diags("101010110")
-#np_pos("1111")
-
-#optimal_move("111111111")
-#print(memo)
+    # Otherwise call algorithm with first_memo_bypass to get optimal move
+    if is_p_position(state, size, True, memo, bypass):
+        print("(Entered state)\n\nYou are in a P-position! If it's you're turn in the above state, you're losing :(\n")
+        return
+    print("(Entered state)\n\nYou are in an N-Position! The two states above show the optimal move!\n")
 
 
 #######################################
@@ -198,7 +191,7 @@ def analyze_all_states(size:int, memo):
     i = 0
     while i < 2**((size**2)):
         if not memo[2*i]:
-            is_p_position(to_string(size, i),size, memo)
+            is_p_position(to_string(size, i), size, False, memo)
         i += 1
 
 def export_p_positions_txt(size:int, filename:str, delimiter:str, memo):
