@@ -23,16 +23,6 @@ def generate_moves(num : str, size : int):
 
 # print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
 
-def create_memory(size:int):
-    # Memory is a two bit bit array:
-    # 1st bit is the "was this state analyzed" bool
-    # 2nd bit it the "is this a P-position" bool
-    # state n \mapsto position 2n and 2n+1
-    total = 2 ** ((size**2)+1)
-    memory = bitarray(total)
-
-    return memory
-
 
 #######################################
 #        Symetry Optimization         #
@@ -47,6 +37,18 @@ def store_into_memory(state:str, is_p_pos:bool, memo):
     memo[(2*int(state,2))] = 1
     memo[(2*int(state,2))+1] = int(is_p_pos)
 
+def store_rotations(state:str, size:int, is_p_pos:bool, memo):
+    # Make list of all rotations
+    states = [None] * 4
+    for i in range(4):
+        states[i] = state
+        state = symmetry.positive_rotation(state, size)
+
+    # Store rotations into memory
+    for rot_state in states:
+        store_into_memory(rot_state, is_p_pos, memo)
+
+    print("rotation time saved!")
 
 #######################################
 #            The Algorithm            #
@@ -80,7 +82,7 @@ def is_p_position(num:str, size:int, memo) -> bool:
         # Store the result into the memory
         store_into_memory(num, result, memo)
         # Store all equivalent states into memory also
-
+        store_rotations(num, size, result, memo)
         return result
 
 # for testing purposes only
@@ -126,6 +128,15 @@ def optimal_move(state:str, size:int, memo):
 #            Memory Tools             #
 #######################################
 
+def create_memory(size:int):
+    # Memory is a two bit bit array:
+    # 1st bit is the "was this state analyzed" bool
+    # 2nd bit it the "is this a P-position" bool
+    # state n \mapsto position 2n and 2n+1
+    total = 2 ** ((size**2)+1)
+    memory = bitarray(total)
+    return memory
+
 def to_string(size:int, num:int):
     state = bin(num)[2:]
     return "0"*(max((size**2)-len(state),0)) + state
@@ -162,7 +173,13 @@ def print_p_pos_cells(size:int, memo, cell_cnt=0, visuals = False):
                     print(state)
         i += 1
 
-def clear_memory():
+# Set all bits to 0
+def reset_memory(memo):
+    for i in range(len(memo)):
+        memo[i] = 0
+
+# set bitarray to []
+def wipe_memory(memo):
     memo.clear()
 
 #######################################

@@ -17,6 +17,7 @@ def standard_analyzing_loop(memory):
 # Main
 
 if __name__ == "__main__":
+    memory = None
 
     while True:
         # change the grid size
@@ -44,9 +45,10 @@ if __name__ == "__main__":
             +"[ 4 ] See all P-positions found so far\n"
             +"[ 5 ] Export all knonw P-positions to a text file\n"
             +"[ 6 ] Generate a randdom state for this size\n"
-            +"[ 7 ] Exit program\n"
+            +"[ 7 ] Reset memory (clear all bits)\n"
+            +"[ 8 ] Exit program\n"
             +"\nChoice:\t")
-            os.system("clear")
+            #####os.system("clear")
             match (u_inp):
                 case "0":
                     Tools.list_searching_statistics(size, memory)
@@ -54,7 +56,7 @@ if __name__ == "__main__":
                 case "1":
                     standard_analyzing_loop(memory)
                 case "2":
-                    print("Flase = N-Position, True = P-Position")
+                    print("0 = N-Position, 1 = P-Position")
                     print(memory)
                     print()
                 case "3":
@@ -86,6 +88,10 @@ if __name__ == "__main__":
                     printing.print_grid(state)
                     print()
                 case "7":
+                    Tools.reset_memory(memory)
+                case "8":
                     sys.exit()
                 case _:
                     break
+        
+    Tools.wipe_memory(memory)
