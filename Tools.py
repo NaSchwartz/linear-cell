@@ -128,6 +128,13 @@ def create_memory(size:int):
     # state n \mapsto position 2n and 2n+1
     total = 2 ** ((size**2)+1)
     memory = bitarray(total)
+
+    # Enter in trivial states with one or zero cells 
+    memory[0] = memory[1] = 1
+    i = 1
+    while 2*i < len(memory):
+        memory[2*i] = 1
+        i *= 2
     return memory
 
 def to_string(size:int, num:int):
@@ -139,20 +146,6 @@ def print_p_pos(memo):
     while i < 2**((size**2)+1):
         if memo[i]:
             print(state)
-
-# def print_p_pos_states():
-#     for state in memo:
-#         if memo[state]:
-#             print_grid(state, False)
-
-# def print_p_pos_cells(cell_cnt=0, visuals = False):
-#     for state in memo:
-#         if state.count("1")>=cell_cnt:
-#             if memo[state]:
-#                 if visuals:
-#                     print_grid(state, False)
-#                 else:
-#                     print(state)
 
 def print_p_pos_cells(size:int, memo, cell_cnt=0, visuals = False):
     i = 0
@@ -222,6 +215,5 @@ def list_searching_statistics(size:int, memo):
          +f"States analyzed: {known_states}\n"
          +f"P-positions found: {p_pos_count}\n"
          +f"N-positions found: {n_pos_count}\n"
-         +f"Trivial states skipped: {(size*size)+1}\n"
-         +f"States left to analyze: {(total_states-known_states)-(size*size)-1}\n")
-    # A crazy expression is used above because the states with 1 or 0 cells are skipped over.
+         +f"States left to analyze: {(total_states-known_states)}\n"
+         +f"Number of trivial states: {(size*size)+1}")
