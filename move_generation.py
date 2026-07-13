@@ -55,7 +55,6 @@ def singles_list(num:str):
         index += 1
     return moves
 
-
 #################################
 #           Horizontal          #
 #################################

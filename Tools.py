@@ -1,4 +1,4 @@
-import generator, symmetry
+import move_generation, symmetry
 from printing import print_grid
 from bitarray import bitarray
 
@@ -6,19 +6,19 @@ from bitarray import bitarray
 #           Move Generation           #
 #######################################
 
-# holy hell, turn those functions into actual generators. 
+# holy hell, turn those functions into actual move_generations. 
 def generate_moves(num : str, size : int):
     moves = set()
     # singles
-    moves.update(generator.singles_list(num))
+    moves.update(move_generation.singles_list(num))
     # horizontals
-    moves.update(generator.horizontals(num, size))
+    moves.update(move_generation.horizontals(num, size))
     # verticals
-    moves.update(generator.verticals(num, size))
+    moves.update(move_generation.verticals(num, size))
     # diaganols - not yet installed
-    moves.update(generator.diaganols(num, size))
+    moves.update(move_generation.diaganols(num, size))
     # diaganols - not yet installed
-    moves.update(generator.anti_diaganols(num, size))
+    moves.update(move_generation.anti_diaganols(num, size))
     return moves
 
 # print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
