@@ -7,6 +7,9 @@ import symmetry
 # testing + printing
 from printing import print_grid, print_moves
 
+#################################
+# Multiple Cell Moves
+
 def multis(num:str):
     # Consturction of positions of the ones list
     ones = []
@@ -15,9 +18,6 @@ def multis(num:str):
         if ch == "1":
             ones.append(i)
         i += 1
-    
-    # Set of unique unordered elements 
-    moves = set()
 
     # Combinatorics :D
     for i in range(2,len(ones)+1,1):
@@ -26,47 +26,32 @@ def multis(num:str):
             for j in comb:
                 temp[j] = "0"
             
-            moves.add(''.join(temp))
-    return sorted(moves)
+            yield ''.join(temp)
 
 #################################
-#           Singles             #
-#################################
+# Single Moves
 
-def singles(num:str):
+def singles_generator(num:str):
     index = 0
     desc = ""
     for ch in num:
         if ch == "1":
-            print(num[:index]+"0"+num[index+1:])
+            yield num[:index]+"0"+num[index+1:]
         else:
             desc += ch
         index += 1
-    
-def singles_list(num:str):
-    moves = []
-    index = 0
-    desc = ""
-    for ch in num:
-        if ch == "1":
-            moves.append(num[:index]+"0"+num[index+1:])
-        else:
-            desc += ch
-        index += 1
-    return moves
 
 #################################
-#           Horizontal          #
-#################################
+# Horizontal Moves
 
+# split number into rows, O(size) work
 def split_into_rows(num:str, size):
     rows = [""]*size
     for i in range(size):
         rows[i] = num[i*size:i*size+size]
     return rows
 
-def horizontals(num:str, size): 
-    horiz = []
+def horizontal_generator(num:str, size): 
     # split the binary string into rows
     rows = split_into_rows(num, size)
     inc = 0
@@ -81,171 +66,67 @@ def horizontals(num:str, size):
                 # smash the combinations back into the other rows
                 copy_rows = rows.copy()
                 copy_rows[inc] = comb
-                horiz.append("".join(copy_rows))
+                yield "".join(copy_rows)
         
         inc += 1
 
-    return horiz
-
-#print(split_into_rows("111111111"))
-#print(horizontals("111111111"))
-#print(multis("111"))
-
-
 #################################
-#           Vertical            #
-#################################
+# Vertical Moves
 
-def verticals(num:str, size:int):
+def vertical_generator(num:str, size:int):
+    # rotate number
     num2 = positive_rotation(num, size)
-    temp = horizontals(num2, size)
-    vert = []
-    for grid in temp:
-        vert.append(negative_rotation(grid, size))
-    return vert
-
-#print(horizontals("001001001"))
-#print(verticals("001001001"))
-#print(multis("111"))
-
+    # apply horizontal moves
+    for state in horizontal_generator(num2, size):
+        # rotate back and yield return
+        yield negative_rotation(state, size)
 
 #################################
-#           Diaganol            #
-#################################
+# Diagonal Moves
 
-def pyramid(height:int):
-    flag = False
-    inc = 0
-    alist = [0]*(height+height-1)
-    for i in range(height+height-1):
-        if i == height:
-            flag = True
-            inc += 1
-        if flag:
-            alist[i] = i - inc
-            inc += 2
-        else:
-            alist[i] = i + 1
-    return alist
+# Transform diagonals into rows
+def apply_isomorphism(number:str, size:int) -> str:
+    new_number = ""
+    msize = 2*size-1
+    counter = 0
+    for i in range(size**2):
+        if counter != 0 and counter % size == 0:
+            new_number += "0" * size
 
-def corner(length:int):
-    alist = [0]*(length+length-1)
-    j = 0
-    for i in range(length+length-1):
-        if i < length:
-            alist[i] = length-1-i
-        else:
-            alist[i] = length*(j+1)
-            j += 1
-    return alist
+        new_number += number[i]
+        counter += 1
 
-def make_index_list(size:int):
-    if size == 6:
-        return [5,4,3,2,1,0, 4,4,3,2,1,0, 3,3,3,2,1,0, 2,2,2,2,1,0, 1,1,1,1,1,0, 0,0,0,0,0,0]
-    elif size == 4:
-        return [3,2,1,0, 2,2,1,0, 1,1,1,0, 0,0,0,0]
-    elif size == 3:
-        return [2,1,0, 1,1,0, 0,0,0]
-    elif size == 2:
-        return [1,0, 0,0]
-    else:
-        total = []
-        init = [0]*size
-        Next = init.copy()
-        for i in range(5, 0, -1):
-            total = Next + total
-            for j in range(0, i-1):
-                Next[j]+=1
-        return total
-#print(make_index_list(5))
+    new_number += "0" * (msize * (size-1))
 
-def split_into_diags(num:str, size:int):
-    # Indexing useful stuff
-    diags = [""]*(size+size-1)
-    ranges = pyramid(size)
-    corn = corner(size)
-    #print(corner(4))
-    #print(ranges)
-    
-    # Putting it all together
-    for i in range(len(diags)):
-        increment = 0
-        for j in range(ranges[i]):
-            diags[i]+=num[corn[i]+increment]
-            increment += size + 1
-    return diags
+    return new_number
 
-def smash_diags(diags, size:int):
-    original = ""
-    start = size - 1 # this is the middle index of the array
-    end = size*2 - 1 # this is the end index of the array
-    increment = 0
-    list_of_indices = make_index_list(size)
-    for number_of_runs in range(size): # #runs = size
-        for list_index in range(start, end, 1):
-            string_index = list_of_indices[increment]
-            original+=diags[list_index][string_index]
-            increment+=1
-        start-=1
-        end-=1
-    return original[::-1]
+# Transform transformed diagonals into diagonals
+def undo_isomorphism(number:str, size:int) -> str:
+    new_number = ""
+    msize = 2*size-1
+    i = 0
+    loop_counter = 0
+    while loop_counter < size:
+        for j in range(size):
+            new_number += number[i]
+            i += 1
+        loop_counter += 1
+        i += size
 
-def diaganols(num:str, size:int):
-    total = []
-    # split the binary string into rows
-    diags = split_into_diags(num, size)
-    inc = 0
-    for diag in diags:
-        if diag.count("1") < 2:
-            inc += 1
-            continue
-        else:
-            # create the moves for each diag
-            for comb in multis(diag):
-                if len(comb) == 1:
-                    # diag is a single cell
-                    continue
-                #print(comb)
-                # smash the combinations back into the other diags
-                copy_diags = diags.copy()
-                copy_diags[inc] = comb
-                total.append(smash_diags(copy_diags, size))
+    return new_number
 
-        inc += 1
+def diagonal_generator(number:str, size:int):
+    # transform number
+    new_number = apply_isomorphism(number, size)
+    # apply vertical moves
+    for state in vertical_generator(new_number, 2*size-1):
+        # transform back and yield return
+        yield undo_isomorphism(state, size)
 
-    return total
-
-def anti_diaganols(num:str, size:int):
-    total = []
-    # split the binary string into rows
-    num = positive_rotation(num, size)
-    diags = split_into_diags(num, size)
-    inc = 0
-    for diag in diags:
-        if diag.count("1") < 2:
-            inc += 1
-            continue
-        else:
-            # create the moves for each diag
-            for comb in multis(diag):
-                if len(comb) == 1:
-                    # diag is a single cell
-                    continue
-                #print(comb)
-                # smash the combinations back into the other diags
-                copy_diags = diags.copy()
-                copy_diags[inc] = comb
-                total.append(negative_rotation(smash_diags(copy_diags, size), size))
-
-        inc += 1
-
-    return total
-
-#print(split_into_diags("ponmlkjihgfedcba"))
-#print("ponmlkjihgfedcba")
-#print(range(size))
-#print(smash_diags(split_into_diags("ponmlkjihgfedcba")))
-
-#alist = [0,1,2]
-#alist = [0] + alist
-#print(alist)
+def anti_diagonal_generator(number:str, size:int):
+    # transform number
+    new_number = apply_isomorphism(positive_rotation(number,size), size)
+    # apply vertical moves
+    for state in vertical_generator(new_number, 2*size-1):
+        # transform back and yield return
+        yield negative_rotation(undo_isomorphism(state, size),size)

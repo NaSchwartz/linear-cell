@@ -6,22 +6,22 @@ from bitarray import bitarray
 #           Move Generation           #
 #######################################
 
-# holy hell, turn those functions into actual move_generations. 
-def generate_moves(num : str, size : int):
-    moves = set()
-    # singles
-    moves.update(move_generation.singles_list(num))
+def move_generator(number : str, size : int):
     # horizontals
-    moves.update(move_generation.horizontals(num, size))
+    for state in move_generation.horizontal_generator(number, size):
+        yield state
     # verticals
-    moves.update(move_generation.verticals(num, size))
-    # diaganols - not yet installed
-    moves.update(move_generation.diaganols(num, size))
-    # diaganols - not yet installed
-    moves.update(move_generation.anti_diaganols(num, size))
-    return moves
-
-# print(generate_moves("1100110000000000")) # should have 9 things (not counting anti diags)
+    for state in move_generation.vertical_generator(number, size):
+        yield state
+    # diaganols
+    for state in move_generation.diagonal_generator(number, size):
+        yield state
+    # anti diaganols
+    for state in move_generation.anti_diagonal_generator(number, size):
+        yield state
+    # singles
+    for state in move_generation.singles_generator(number):
+        yield state
 
 
 #######################################
@@ -81,7 +81,7 @@ def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:b
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        result = not any(is_p_position(state, size, do_printing, memo, first_memo_bypass) for state in generate_moves(num, size))
+        result = not any(is_p_position(state, size, do_printing, memo, first_memo_bypass) for state in move_generator(num, size))
 
         # Do printing if told to do so
         if do_printing:
