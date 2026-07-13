@@ -1,4 +1,5 @@
-import sys, os, traceback, printing, Tools
+import sys, os, time, threading, traceback
+import printing, Tools
 
 # print(int("10111",2))
 # sys.exit()
@@ -75,12 +76,14 @@ if __name__ == "__main__":
                 case "4":
                     print()
                     print("Please be patient, this may take some time...")
+                    start = time.perf_counter()
                     try:
                         Tools.analyze_all_states(size, memory)
+                        end = time.perf_counter()
+                        print(f"Elapsed time: {end - start:.5f}seconds\n")
                     except:
                         print("\nWARNING Something went wrong (you probably interupted the process)\n")
-                        traceback.print_exc()
-
+                        # traceback.print_exc()
                     print("Done!")
                     print()
                 case "5":

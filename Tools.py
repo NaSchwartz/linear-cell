@@ -95,6 +95,7 @@ def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:b
         store_into_memory(num, result, memo)
         # Store all equivalent states into memory also
         store_rotations(num, size, result, memo)
+        store_rotations(symmetry.vert_reflection(num, size), size, result, memo)
         return result
 
 # Find the best move in the position (to reduce N-pos to P-pos)
