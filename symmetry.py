@@ -171,8 +171,94 @@ def move_to_bot_right(num : str, size : int) -> str :
     
     return curr
 
-#print_grid("0000000000000001")
-#print_grid(move_to_bot_right("0000000000000001"))
+#################################
+#        Trim Reductions        #
+#################################
 
-#for i in normal_forms("101101000"):
-    #print_grid(i)
+# Helper function
+def reduce_column(num:str, size:(int,int), offset:int) -> str:
+    n : int = size[1]
+    acc : str = ""
+    for i in range(len(num)):
+        if i%n == offset:
+            continue
+        acc+= num[i]
+    return acc
+
+####################################### 
+
+def reduce_bot_row(number, size):
+    m : int = size[0]
+    n : int = size[1]
+    for ch in range(0,n,1):
+        if number[ch] == "1":
+            return False
+    return (number[n:],(m-1,n))
+
+def reduce_top_row(number,size):
+    m : int = size[0]
+    n : int = size[1]
+    for ch in range(n*m-1,n*m-n,-1): #-1???
+        if number[ch] == "1":
+            return False
+    return (number[:n*m-n],(m-1,n))
+
+def reduce_lft_col(number,size):
+    m : int = size[0]
+    n : int = size[1]
+    for ch in range(0,n*m-n,n):
+        if number[ch] == "1":
+            return False
+    return (reduce_column(number,(m,n),0),(m,n-1))
+
+def reduce_rgt_col(number,size):
+    m : int = size[0]
+    n : int = size[1]
+    for ch in range(n-1,n*m-1,n):
+        if number[ch] == "1":
+            return False
+    return (reduce_column(number,(m,n),n-1),(m,n-1))
+
+#######################################
+
+def trim_reduction(num:str, size:(int,int)) -> (str,(int,int)):
+    m : int = size[0]
+    n : int = size[1]
+    while True:
+        info = reduce_bot_row(num,(m,n))
+        if info:
+            num = info[0]
+            m = info[1][0]
+            n = info[1][1]
+        else:
+            break
+    while True:
+        info = reduce_top_row(num,(m,n))
+        if info:
+            num = info[0]
+            m = info[1][0]
+            n = info[1][1]
+        else:
+            break
+    while True:
+        info = reduce_rgt_col(num,(m,n))
+        if info:
+            num = info[0]
+            m = info[1][0]
+            n = info[1][1]
+        else:
+            break
+    while True:
+        info = reduce_lft_col(num,(m,n))
+        if info:
+            num = info[0]
+            m = info[1][0]
+            n = info[1][1]
+        else:
+            break
+    return (num,(m,n))
+
+#number = "0000000100011100010000000"
+#size = (5,5)
+#info = trim_reduction(number,size)
+#print(info)
