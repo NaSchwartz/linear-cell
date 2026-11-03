@@ -6,18 +6,18 @@ from bitarray import bitarray
 #           Move Generation           #
 #######################################
 
-def move_generator(number : str, size : int):
+def move_generator(number : str, m : int, n : int):
     # horizontals
-    for state in move_generation.horizontal_generator(number, size):
+    for state in move_generation.horizontal_generator(number, m,n):
         yield state
     # verticals
-    for state in move_generation.vertical_generator(number, size):
+    for state in move_generation.vertical_generator(number, m,n):
         yield state
     # diaganols
-    for state in move_generation.diagonal_generator(number, size):
+    for state in move_generation.diagonal_generator(number, m,n):
         yield state
     # anti diaganols
-    for state in move_generation.anti_diagonal_generator(number, size):
+    for state in move_generation.anti_diagonal_generator(number, m,n):
         yield state
     # singles
     for state in move_generation.singles_generator(number):
@@ -37,12 +37,12 @@ def store_into_memory(state:str, is_p_pos:bool, memo):
     memo[(2*int(state,2))] = 1
     memo[(2*int(state,2))+1] = int(is_p_pos)
 
-def store_rotations(state:str, size:int, is_p_pos:bool, memo):
+def store_rotations(state:str, m:int, n:int, is_p_pos:bool, memo):
     # Make list of all rotations
     states = [None] * 4
     for i in range(4):
         states[i] = state
-        state = symmetry.positive_rotation(state, size)
+        state,m,n = symmetry.positive_rotation(state, m,n)
 
     # Store rotations into memory
     for rot_state in states:
@@ -51,7 +51,7 @@ def store_rotations(state:str, size:int, is_p_pos:bool, memo):
     # print("rotation time saved!")
 
 #######################################
-#            The Algorithm            #
+#        The Algorithm (Dense)        #
 #######################################
 
 # Reduce a given state using isomorphisms       [DO THIS OPTIIZATION LAST!]
@@ -60,19 +60,17 @@ def store_rotations(state:str, size:int, is_p_pos:bool, memo):
 
 
 # Determine if a board state is a p-pos, and store result into memory
-def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:bool = False) -> bool:
-
+def is_p_position(num:str, m:int, n:int, do_printing:bool, memo, first_memo_bypass:bool = False) -> bool:
     # Firstly, check memo if already known
     # Bypass this step if we need an optimal move for an N-posiiton already in the memory
     if not first_memo_bypass:
-        
         if memo[2*int(num,2)]:
             # print("Time saved")
             return memo[(2*int(num,2))+1]
         first_memo_bypass = False
 
     # base case: P-position
-    if num == "0"*size**2:
+    if num == "0"*(m*n):
         return True
     # base case: N-position
     elif num.count("1") == 1:
@@ -81,11 +79,11 @@ def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:b
         # if all moves are N-positions, it's a P-position
         # if 1 move is a P-position, it's an N-position
         # Disclaimer: AI helped me with the next line because PAIN
-        result = not any(is_p_position(state, size, do_printing, memo, first_memo_bypass) for state in move_generator(num, size))
+        result = not any(is_p_position(state, m,n, do_printing, memo, first_memo_bypass) for state in move_generator(num, m,n))
 
         # Do printing if told to do so
         if do_printing:
-            print_grid(num)
+            print_grid(num, m,n)
             if result:
                 print("P-position")
             else:
@@ -93,41 +91,51 @@ def is_p_position(num:str, size:int, do_printing:bool, memo, first_memo_bypass:b
 
         # Store the result into the memory
         store_into_memory(num, result, memo)
-        # Store all equivalent states into memory also
-        store_rotations(num, size, result, memo)
-        store_rotations(symmetry.vert_reflection(num, size), size, result, memo)
+        # Store all equivalent states into memory also, accounting for dimensional memory error
+        if m == n:
+            store_rotations(num, m,n, result, memo)
+            store_rotations(symmetry.vert_reflection(num, m,n), m,n, result, memo)
+        else:
+            store_into_memory(symmetry.vert_reflection(num,m,n), result, memo)
+            store_into_memory(symmetry.horz_reflection(num,m,n), result, memo)
         return result
 
 # Find the best move in the position (to reduce N-pos to P-pos)
-def optimal_move(state:str, size:int, memo):
+def optimal_move(state:str, m:int, n:int, memo):
     bypass = False
     # First check if this is in the memory already
     if memo[2*int(state,2)]:
         bypass = True
-        # if it's a known P-position, all done
+        # if it's a known P-position, all done 
         if memo[(2*int(state,2))+1]:
-            print_grid(state)
+            print_grid(state, m,n)
             print("(Entered state)\n\nThis P-position is in the memory already!\n")
             return
         # if it's a known N-position, we need to find the best move
 
     # Otherwise call algorithm with first_memo_bypass to get optimal move
-    if is_p_position(state, size, True, memo, bypass):
+    if is_p_position(state, m,n, True, memo, bypass):
         print("(Entered state)\n\nYou are in a P-position! If it's you're turn in the above state, you're losing :(\n")
         return
     print("(Entered state)\n\nYou are in an N-Position! The two states above show the optimal move!\n")
 
+#######################################
+#        The Algorithm (Sparse)       #
+#######################################
+
+def is_p_posiiton_sparse(num:str, m:int, n:int, do_printing:bool, memo, first_memo_bypass:bool = False) -> bool:
+    pass
 
 #######################################
 #            Memory Tools             #
 #######################################
 
-def create_memory(size:int):
+def create_memory(m:int, n:int):
     # Memory is a two bit bit array:
     # 1st bit is the "was this state analyzed" bool
     # 2nd bit it the "is this a P-position" bool
     # state n \mapsto position 2n and 2n+1
-    total = 2 ** ((size**2)+1)
+    total = 2 ** ((m*n)+1)
     memory = bitarray(total)
 
     # Enter in trivial states with one or zero cells 
@@ -138,24 +146,24 @@ def create_memory(size:int):
         i *= 2
     return memory
 
-def to_string(size:int, num:int):
+def to_string(m:int, n:int, num:int):
     state = bin(num)[2:]
-    return "0"*(max((size**2)-len(state),0)) + state
+    return "0"*(max((m*n)-len(state),0)) + state
 
 def print_p_pos(memo):
     i = 0
-    while i < 2**((size**2)+1):
+    while i < 2**((m*n)+1):
         if memo[i]:
             print(state)
 
-def print_p_pos_cells(size:int, memo, cell_cnt=0, visuals = False):
+def print_p_pos_cells(m:int, n:int, memo, cell_cnt=0, visuals = False):
     i = 0
-    while i < 2**((size**2)):
+    while i < 2**(m*n):
         if memo[2*i] and memo[(2*i)+1]:
-            state = to_string(size, i)
+            state = to_string(m,n, i)
             if state.count("1")>=cell_cnt:
                 if visuals:
-                    print_grid(state, False)
+                    print_grid(state, m,n, False)
                 else:
                     print(state)
         i += 1
@@ -175,33 +183,33 @@ def wipe_memory(memo):
 
 import random
 
-def random_state(size):
+def random_state(m:int, n:int):
     state = ""
-    for i in range(size**2):
+    for i in range(m*n):
         state += str(random.randint(0, 1))
     return state
 
-def analyze_all_states(size:int, memo):
+def analyze_all_states(m:int, n:int, memo):
     i = 0
-    while i < 2**((size**2)):
+    while i < 2**(m*n):
         if not memo[2*i]:
-            is_p_position(to_string(size, i), size, False, memo)
+            is_p_position(to_string(m,n, i), m,n, False, memo)
         i += 1
 
-def export_p_positions_txt(size:int, filename:str, delimiter:str, memo):
+def export_p_positions_txt(m:int, n:int, filename:str, delimiter:str, memo):
     file = open(filename, 'w')
     i = 0
-    while i < 2**((size**2)):
+    while i < 2**(m*n):
         if memo[2*i] and memo[(2*i)+1]:
-            state = to_string(size, i)
+            state = to_string(m,n, i)
             file.write(state + delimiter)
         i += 1
     file.close()
 
-def list_searching_statistics(size:int, memo):
+def list_searching_statistics(m:int, n:int, memo):
     p_pos_count = 0
     n_pos_count = 0
-    total_states = 2**((size**2))
+    total_states = 2**(m*n)
     i = 0
     while i < total_states:
         if memo[2*i]:
@@ -211,10 +219,10 @@ def list_searching_statistics(size:int, memo):
                 n_pos_count += 1
         i += 1
     known_states = p_pos_count + n_pos_count
-    print(f"Searching Statistics for an {size}x{size} board\n"
+    print(f"Searching Statistics for an {m}x{n} board\n"
          +f"Total states: {total_states}\n"
          +f"States analyzed: {known_states}\n"
          +f"P-positions found: {p_pos_count}\n"
          +f"N-positions found: {n_pos_count}\n"
          +f"States left to analyze: {(total_states-known_states)}\n"
-         +f"Number of trivial states: {(size*size)+1}")
+         +f"Number of trivial states: {(m*n)+1}")

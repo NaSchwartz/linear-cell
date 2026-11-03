@@ -44,16 +44,16 @@ def singles_generator(num:str):
 #################################
 # Horizontal Moves
 
-# split number into rows, O(size) work
-def split_into_rows(num:str, size):
-    rows = [""]*size
-    for i in range(size):
-        rows[i] = num[i*size:i*size+size]
+# split number into rows, O(max{m,n}) work
+def split_into_rows(num:str, m,n):
+    rows = [""]*m
+    for i in range(m):
+        rows[i] = num[i*n:i*n+n]
     return rows
 
-def horizontal_generator(num:str, size): 
+def horizontal_generator(num:str, m,n): 
     # split the binary string into rows
-    rows = split_into_rows(num, size)
+    rows = split_into_rows(num, m,n)
     inc = 0
     for row in rows:
         if row.count("1") < 2:
@@ -73,60 +73,81 @@ def horizontal_generator(num:str, size):
 #################################
 # Vertical Moves
 
-def vertical_generator(num:str, size:int):
+def vertical_generator(num:str, m:int, n:int):
     # rotate number
-    num2 = positive_rotation(num, size)
+    num2,m,n = positive_rotation(num, m,n)
     # apply horizontal moves
-    for state in horizontal_generator(num2, size):
+    #print(num,num2)
+    for state in horizontal_generator(num2, m,n):
         # rotate back and yield return
-        yield negative_rotation(state, size)
+        yield negative_rotation(state, m,n)[0]
 
 #################################
 # Diagonal Moves
 
-# Transform diagonals into rows
-def apply_isomorphism(number:str, size:int) -> str:
+# Transform diagonals into columns
+def apply_isomorphism(number:str, m:int, n:int) -> (str,int,int):
     new_number = ""
-    msize = 2*size-1
+    msize = n + m-1
     counter = 0
-    for i in range(size**2):
-        if counter != 0 and counter % size == 0:
-            new_number += "0" * size
+    for i in range(m*n):
+        if counter != 0 and counter % n == 0:
+            new_number += "0" * m
 
         new_number += number[i]
         counter += 1
 
-    new_number += "0" * (msize * (size-1))
-
-    return new_number
+    return (new_number, m, n+m-1)
 
 # Transform transformed diagonals into diagonals
-def undo_isomorphism(number:str, size:int) -> str:
+def undo_isomorphism(number:str, m:int, n:int) -> (str,int,int):
+    #print(number,m,n)
     new_number = ""
-    msize = 2*size-1
+    msize = n + m-1
     i = 0
     loop_counter = 0
-    while loop_counter < size:
-        for j in range(size):
+    while loop_counter < m:
+        for j in range(n-m+1):
+            #print(i, loop_counter)
             new_number += number[i]
             i += 1
         loop_counter += 1
-        i += size
+        i += m
 
-    return new_number
+    return (new_number, m, n-m+1)
 
-def diagonal_generator(number:str, size:int):
+#num = "10011111"
+#m,n = (2,4)
+#print_grid(num,m,n)
+#num,m,n = apply_isomorphism(num,m,n)
+#print_grid(num,m,n)
+#num,m,n = undo_isomorphism(num,m,n)
+#print_grid(num,m,n)
+
+def diagonal_generator(number:str, m:int, n:int):
     # transform number
-    new_number = apply_isomorphism(number, size)
+    new_number,m,n = apply_isomorphism(number, m,n)
     # apply vertical moves
-    for state in vertical_generator(new_number, 2*size-1):
+    for state in vertical_generator(new_number, m, n):
         # transform back and yield return
-        yield undo_isomorphism(state, size)
+        yield undo_isomorphism(state, m,n)[0]
 
-def anti_diagonal_generator(number:str, size:int):
+def anti_diagonal_generator(number:str, m:int, n:int):
     # transform number
-    new_number = apply_isomorphism(positive_rotation(number,size), size)
+    number,m,n = positive_rotation(number,m,n)
+    new_number,m,n = apply_isomorphism(number,m,n)
     # apply vertical moves
-    for state in vertical_generator(new_number, 2*size-1):
+    canonnical = (m,n)
+    for state in vertical_generator(new_number, m,n):
+        #Reset m,n because n looses two after each run in the vertical generator somehow 
+        m,n = canonnical
         # transform back and yield return
-        yield negative_rotation(undo_isomorphism(state, size),size)
+        #print(f"pre:{state}, dim: {m,n}")
+        state,m,n = undo_isomorphism(state, m,n)
+        #print(f"undo:{state}, dim: {m,n}")
+        yield negative_rotation(state, m, n)[0]
+
+#for i in anti_diagonal_generator("111110101",3,3):
+#    2 == 2
+
+#print(undo_isomorphism("101000100000011",3,5))

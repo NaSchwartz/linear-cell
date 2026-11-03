@@ -1,7 +1,6 @@
 from math import sqrt
 
-def print_grid(num : str, include_string:bool = True):
-    size = sqrt(len(num))
+def print_grid(num : str, m:int, n:int, include_string:bool = True):
     cells = ["\u00B7", "\u25A1"]
     desc = ""
     counter = 0
@@ -9,7 +8,7 @@ def print_grid(num : str, include_string:bool = True):
     for i in range(len(num)-1,-1,-1):
         desc += cells[int(num[i])] + " "
         counter += 1
-        if counter%size == 0 and counter !=size**2:
+        if counter%n == 0 and counter !=m*n:
             desc+= "\n"
     if include_string:
         print()
