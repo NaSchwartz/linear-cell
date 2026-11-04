@@ -123,8 +123,33 @@ def optimal_move(state:str, m:int, n:int, memo):
 #        The Algorithm (Sparse)       #
 #######################################
 
-def is_p_posiiton_sparse(num:str, m:int, n:int, do_printing:bool, memo, first_memo_bypass:bool = False) -> bool:
-    pass
+def is_sparse_p_positon(num:str, m:int, n:int, do_printing:bool) -> bool:
+    # base case: P-position
+    if num == "0"*(m*n):
+        return True
+    # base case: N-position
+    elif num.count("1") == 1:
+        return False
+    else:
+        # if all moves are N-positions, it's a P-position
+        # if 1 move is a P-position, it's an N-position
+        result = not any(is_sparse_p_positon(state, m,n, do_printing) for state in move_generator(num, m,n))
+
+        # Do printing if told to do so
+        if do_printing:
+            print_grid(num, m,n)
+            if result:
+                print("P-position")
+            else:
+                print("N-Position") 
+
+        return result
+
+def sparse_optimal_move(state:str, m:int, n:int):
+    if is_sparse_p_positon(state, m,n, True):
+        print("(Entered state)\n\nYou are in a P-position! If it's you're turn in the above state, you're losing :(\n")
+        return
+    print("(Entered state)\n\nYou are in an N-Position! The two states above show the optimal move!\n")
 
 #######################################
 #            Memory Tools             #
@@ -187,6 +212,12 @@ def random_state(m:int, n:int):
     state = ""
     for i in range(m*n):
         state += str(random.randint(0, 1))
+    return state
+
+def random_sparse_state(m:int, n:int, sparsity:float=0.1):
+    state = ""
+    for i in range(m*n):
+        state += str(int(random.random()<=sparsity))
     return state
 
 def analyze_all_states(m:int, n:int, memo):
