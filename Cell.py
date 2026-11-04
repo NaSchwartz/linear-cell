@@ -34,6 +34,8 @@ if __name__ == "__main__":
         # change the grid dimensions
         try:
             sparse = (input("Enter the key \'s\' if you wish to analyze a sparse position:\t")=='s')
+            if sparse:
+                print("\nSPARSE MODE\n")
 
             m = int(input("Enter the number of rows in the grid:\t"))
             if m < 1:

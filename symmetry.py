@@ -34,7 +34,6 @@ def translate_left(num : str, m : int, n : int) -> str :
     else:
         return num
 
-
 #################################
 #           Reflection          #
 #################################
@@ -65,19 +64,11 @@ def horz_reflection(num : str, m : int, n : int) -> str :
             desc += columns[j][i]
     return desc
 
-#num = "11111000"
-#m,n = (2,4)
-#print_grid(num,m,n)
-#print_grid(horz_reflection(num,m,n),m,n)
-#print_grid(vert_reflection(num,m,n),m,n)
-
 #################################
 #           Rotation            #
 #################################
 
 # WARNING: preforming a rotation with n \neq m swaps their values
-
-
 # rows into columns (clockwise)
 def negative_rotation(num : str, m : int, n : int) -> (str,int,int) :
     # Split the "grid" into rows
@@ -122,26 +113,26 @@ def reduce_column(num:str, n:int, offset:int) -> str:
 
 ####################################### 
 
-def reduce_bot_row(number, m, n):
+def reduce_bot_row(number, m, n): # should be fine
     for ch in range(0,n,1):
         if number[ch] == "1":
             return False
     return (number[n:],m-1,n)
 
 def reduce_top_row(number, m, n):
-    for ch in range(n*m-1,n*m-n,-1): #-1???
+    for ch in range(n*m-1,n*m-n-1,-1):
         if number[ch] == "1":
             return False
     return (number[:n*m-n],m-1,n)
 
 def reduce_lft_col(number, m, n):
-    for ch in range(0,n*m-n,n):
+    for ch in range(0,n*m-n+n,n): #    for ch in range(0,n*m-n,n):
         if number[ch] == "1":
             return False
     return (reduce_column(number,n,0),m,n-1)
 
 def reduce_rgt_col(number, m, n):
-    for ch in range(n-1,n*m-1,n):
+    for ch in range(n-1,n*m-1+n,n):
         if number[ch] == "1":
             return False
     return (reduce_column(number,n,n-1),m,n-1)
@@ -149,36 +140,43 @@ def reduce_rgt_col(number, m, n):
 #######################################
 
 def trim_reduction(num:str, m:int, n:int) -> (str,int,int):
+    #print(f"trimming: {num,m,n}")
     while True:
+        if m==0 or n==0:
+            return (num,m,n)
+        #print(f"bot: {num,m,n}")
         info = reduce_bot_row(num, m, n)
         if info:
-            num = info[0]
-            m = info[1]
-            n = info[2]
+            num,m,n = info
         else:
             break
     while True:
+        if m==0 or n==0:
+            return (num,m,n)
+        #print(f"top: {num,m,n}")
         info = reduce_top_row(num, m, n)
         if info:
-            num = info[0]
-            m = info[1]
-            n = info[2]
+            num,m,n = info
         else:
             break
     while True:
+        if m==0 or n==0:
+            return (num,m,n)
+        #print(f"right: {num,m,n}")
         info = reduce_rgt_col(num, m, n)
         if info:
-            num = info[0]
-            m = info[1]
-            n = info[2]
+            num,m,n = info
         else:
             break
     while True:
+        if m==0 or n==0:
+            return (num,m,n)
+        #print(f"left: {num,m,n}")
         info = reduce_lft_col(num, m, n)
         if info:
-            num = info[0]
-            m = info[1]
-            n = info[2]
+            num,m,n = info
         else:
             break
     return (num,m,n)
+
+#print(trim_reduction('000010',3,2))

@@ -124,11 +124,17 @@ def optimal_move(state:str, m:int, n:int, memo):
 #######################################
 
 def is_sparse_p_positon(num:str, m:int, n:int, do_printing:bool) -> bool:
-    # base case: P-position
-    if num == "0"*(m*n):
+    if m==0 or n==0:
         return True
+    if m==1 or n==1:
+        return False
+    # trim state
+    num,m,n = symmetry.trim_reduction(num,m,n)
     # base case: N-position
-    elif num.count("1") == 1:
+    if m==0 or n==0:
+        return True
+    # base case: P-position
+    if m==1 or n==1:
         return False
     else:
         # if all moves are N-positions, it's a P-position
